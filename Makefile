@@ -6,7 +6,8 @@ IncDir := $(CurDir)/inc/
 Headers := $(shell ls ./inc)
 Sources := $(shell ls ./src)
 Ojects := $(shell for src in $(Sources); do echo -e "$${src/%.c/.o} \c"; done;)
-LibName := clib.a
+LibName := libcl
+LibLink := cl
 
 HeadPath := $(shell for src in $(shell ls ./inc); do echo -e $(IncDir)/$$src; done;)
 SrcPath := $(shell for src in $(shell ls ./src); do echo -e $(SrcDir)/$$src; done;)
@@ -36,7 +37,7 @@ genslib: $(HeadPath) $(SrcPath)
 	done  
 	@rm -f $(OutputDir)/*.a
 	@for obj in $(Ojects); do\
-		ar -r $(OutputDir)/$(LibName) $(OutputDir)/$${obj}; \
+		ar -r $(OutputDir)/$(LibName).a $(OutputDir)/$${obj}; \
 	done
 
 testcase: FORCE genslib queuetest
@@ -45,7 +46,7 @@ testcase: FORCE genslib queuetest
 queuetest:
 	@echo start queue test
 	@gcc -std=c99 -I $(IncDir) -c $(QueTestPath) -o  $(OutputDir)/$(QueTestName).o
-	@gcc -std=c99 -I $(IncDir) $(OutputDir)/$(LibName) $(OutputDir)/$(QueTestName).o -o $(OutputDir)/$(QueTestName).exe
+	@gcc $(OutputDir)/$(QueTestName).o -std=c99 -I $(IncDir) -L$(OutputDir) -l$(LibLink)  -o $(OutputDir)/$(QueTestName).exe
 	@$(OutputDir)/$(QueTestName).exe
 
 
