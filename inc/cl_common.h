@@ -31,9 +31,6 @@ typedef enum
 
 } CL_RESULT;
 
-
-#define CL_INLINE           __inline
-#define CL_STATIC_INLINE    static CL_INLINE
 #define CL_NULL             (0)
 
 #define CL_ARRAY_LENGTH(array)      (sizeof(array) / sizeof(array[0]))

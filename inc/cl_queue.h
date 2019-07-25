@@ -28,17 +28,24 @@ CL_RESULT CL_QueueAdd(CL_QueueInfo_t *q, void *data);
 
 CL_RESULT CL_QueuePoll(CL_QueueInfo_t *q, void *data);
 
-CL_STATIC_INLINE void CL_QueueClear(CL_QueueInfo_t *q){
+static inline void CL_QueueClear(CL_QueueInfo_t *q){
     q->head = q->tail = 0;
 }
 
-CL_STATIC_INLINE int32_t CL_QueueCapacity(CL_QueueInfo_t *q){
+static inline int32_t CL_QueueCapacity(CL_QueueInfo_t *q){
     return q->capacity;
 }
 
 CL_BOOL CL_QueueEmpty(CL_QueueInfo_t *q);
 
 CL_BOOL CL_QueueFull(CL_QueueInfo_t *q);
+
+#define CL_QUEUE_FOR_EACH(q_ptr, data_ptr, data_type) \
+    data_ptr = ((data_type *)((q_ptr)->data)) + (q_ptr)->head; \
+    for(int ___q_offset___ = (q_ptr)->head; \
+        ___q_offset___ != (q_ptr)->tail; \
+        ___q_offset___ = (___q_offset___ + 1) % ((q_ptr)->capacity + 1), data_ptr = ((data_type *)((q_ptr)->data)) + ___q_offset___)
+
 
 #ifdef __cplusplus
 }
