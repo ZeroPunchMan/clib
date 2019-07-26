@@ -15,19 +15,19 @@ SrcPath := $(shell for src in $(shell ls ./src); do echo -e $(SrcDir)/$$src; don
 
 OutputDir := ./build/debug/
 
-QueTestName := queue_test
-QueTestPath := $(CurDir)/testcase/$(QueTestName).c
-QueTestObj := $(OutputDir)/$(QueTestName).o
+# add test case here
+TestCases := queue_test pool_test
+TestCaseDir := $(CurDir)/testcase/
 
 DBG ?= 1
 
-test:
-	@echo $(Ojects)
-# @echo $(SrcPath)
-# @echo $(HeadPath)
+# test:
+# 	@echo $(Ojects)
+# 	@echo $(SrcPath)
+# 	@echo $(HeadPath)
 
-all:
-	@echo "all"
+all: testcase
+	
 
 genslib: $(HeadPath) $(SrcPath)
 	@echo gen slib
@@ -40,15 +40,13 @@ genslib: $(HeadPath) $(SrcPath)
 		ar -r $(OutputDir)/$(LibName).a $(OutputDir)/$${obj}; \
 	done
 
-testcase: FORCE genslib queuetest
-	
-
-queuetest:
-	@echo start queue test
-	@gcc -std=c99 -I $(IncDir) -c $(QueTestPath) -o  $(OutputDir)/$(QueTestName).o
-	@gcc $(OutputDir)/$(QueTestName).o -std=c99 -I $(IncDir) -L$(OutputDir) -l$(LibLink)  -o $(OutputDir)/$(QueTestName).exe
-	@$(OutputDir)/$(QueTestName).exe
-
+testcase: FORCE genslib 
+	@for tc in $(TestCases); do\
+		echo start $${tc}...; \
+		gcc -std=c99 -I $(IncDir) -c $(TestCaseDir)/$${tc}.c -o  $(OutputDir)/$${tc}.o; \
+		gcc $(OutputDir)/$${tc}.o -std=c99 -I $(IncDir) -L$(OutputDir) -l$(LibLink)  -o $(OutputDir)/$${tc}.exe; \
+		$(OutputDir)/$${tc}.exe; \
+	done
 
 .PHONY: FORCE
 FORCE:

@@ -3,6 +3,8 @@
         "cl_queue.h": "c",
         "cl_common.h": "c",
         "pthread.h": "c",
-        "unistd.h": "c"
+        "unistd.h": "c",
+        "cl_pool.h": "c",
+        "stdint.h": "c"
     }
 }

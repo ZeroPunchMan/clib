@@ -4,6 +4,7 @@
             "name": "Win32",
             "includePath": [
                 "${workspaceFolder}/**",
+                "${workspaceFolder}/inc",
                 "D:/cygwin64/lib/gcc/x86_64-pc-cygwin/7.4.0/include"
             ],
             "defines": [

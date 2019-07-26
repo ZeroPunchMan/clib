@@ -1,4 +1,4 @@
-#include "stdio.h"
+#include "test_common.h"
 #include "cl_queue.h"
 #include "pthread.h"
 #include "unistd.h"
@@ -225,7 +225,6 @@ static CL_RESULT AsyncTest(void)
     }
 }
 
-typedef CL_RESULT (*TestFunc)(void);
 
 TestFunc testCases[] = {
     ForeachTest,
