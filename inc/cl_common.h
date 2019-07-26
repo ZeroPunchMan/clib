@@ -1,6 +1,4 @@
-#ifndef _CL_COMMON_H_
-#define _CL_COMMON_H_
-
+#pragma once
 
 #include "stdint.h"
 #include "string.h"
@@ -47,6 +45,4 @@ typedef enum
 }
 #endif
 
-
-#endif
 

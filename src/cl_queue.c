@@ -2,7 +2,7 @@
 
 #define DATA_CPY(DST, SRC, SIZE) memcpy(DST, SRC, SIZE)
 
-static inline int NextPos(int ptr, int max)
+static inline uint16_t NextPos(uint16_t ptr, uint16_t max)
 {
     ptr = (ptr+1) % (max+1);
     return ptr;
@@ -39,9 +39,30 @@ CL_BOOL CL_QueueEmpty(CL_QueueInfo_t *q)
 
 CL_BOOL CL_QueueFull(CL_QueueInfo_t *q)
 {
-    int nextTail = NextPos(q->tail, q->capacity);
+    uint16_t nextTail = NextPos(q->tail, q->capacity);
     if (nextTail == q->head)
         return CL_TRUE;
 
     return CL_FALSE;
+}
+
+uint16_t CL_QueueLength(CL_QueueInfo_t *q)
+{
+    uint16_t head, tail;
+    head = q->head;
+    tail = q->tail;
+
+    if(tail >= head)
+    {
+        return tail - head;
+    }
+    else
+    {
+        return q->capacity - head + 1 + tail;   
+    }
+}
+
+uint16_t CL_QueueFreeSpace(CL_QueueInfo_t *q)
+{
+    return q->capacity - CL_QueueLength(q);
 }

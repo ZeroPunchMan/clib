@@ -11,8 +11,7 @@
 
     CL_FsmUpdate(&testFsm, interval);
  **********************************************/
-#ifndef _CL_FSM_H_
-#define _CL_FSM_H_ 
+#pragma once
 
 #include "cl_common.h"
 
@@ -58,6 +57,4 @@ extern CL_Fsm_t name;
 
 #ifdef __cplusplus
 }
-#endif
-
 #endif

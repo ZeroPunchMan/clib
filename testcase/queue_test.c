@@ -4,6 +4,7 @@
 #include "unistd.h"
 #include <sys/select.h>
 
+
 typedef struct
 {
     uint8_t a;
@@ -84,6 +85,72 @@ static CL_RESULT ForeachTest(void)
     return CL_SUCCESS;
 }
 
+//****************length etc.*************************************
+#define LEN_TEST_CAP    (1024)
+CL_QUEUE_DEF_INIT(len_q, LEN_TEST_CAP, int8_t, static);
+CL_RESULT LengthTest(void)
+{
+    int8_t data;
+    //cap
+    if(CL_QueueCapacity(&len_q) != LEN_TEST_CAP)
+    {
+        return CL_FAILED;
+    }
+    // printf("cap: %d\n", CL_QueueCapacity(&len_q));
+
+    //full
+    for (int i = 0; i < CL_QueueCapacity(&len_q); i++)
+    {
+        CL_QueueAdd(&len_q, &data);
+    }
+
+    if (CL_QueueLength(&len_q) != CL_QueueCapacity(&len_q) || CL_QueueFreeSpace(&len_q) != 0)
+    {
+        return CL_FAILED;
+    }
+    // printf("full len: %d, free: %d\n", CL_QueueLength(&len_q), CL_QueueFreeSpace(&len_q));
+
+    //half
+    uint16_t halfCap = CL_QueueCapacity(&len_q) / 2;
+    for (int i = 0; i < halfCap; i++)
+    {
+        CL_QueuePoll(&len_q, &data);
+    }
+
+    if (CL_QueueLength(&len_q) != halfCap || CL_QueueFreeSpace(&len_q) != halfCap)
+    {
+        return CL_FAILED;
+    }
+    // printf("half len: %d, free: %d\n", CL_QueueLength(&len_q), CL_QueueFreeSpace(&len_q));    
+
+    //not full
+    for (int i = 0; i < CL_QueueCapacity(&len_q) * 2 + 30; i++)
+    {
+        if (CL_QueueFull(&len_q))
+        {
+            CL_QueuePoll(&len_q, &data);
+        }
+
+        CL_QueueAdd(&len_q, &data);
+    }
+
+    uint16_t pollCount = CL_QueueCapacity(&len_q) / 10;
+    for (int i = 0; i < pollCount; i++)
+    {
+        CL_QueuePoll(&len_q, &data);
+    }
+
+    if (CL_QueueLength(&len_q) != (CL_QueueCapacity(&len_q) - pollCount) || CL_QueueFreeSpace(&len_q) != pollCount)
+    {
+        return CL_FAILED;
+    }
+    // printf("part len: %d, free: %d\n", CL_QueueLength(&len_q), CL_QueueFreeSpace(&len_q));    
+
+
+    return CL_SUCCESS;
+}
+
+//********************async test*******************************
 void select_sleep(time_t sec, suseconds_t us)
 {
     struct timeval timeout;
@@ -98,16 +165,16 @@ static CL_BOOL slowPoll = CL_FALSE;
 static CL_RESULT asyncTestResult = CL_SUCCESS;
 #define LOOP_MAX_VAL 10
 CL_QUEUE_DEF_INIT(async_q, 100, int, static);
-static void* PollThread(void *arg)
+static void *PollThread(void *arg)
 {
     int lastVal = -1;
     while (1)
     {
         int pollVal;
-        if(CL_QueuePoll(&async_q, &pollVal) == CL_SUCCESS)
+        if (CL_QueuePoll(&async_q, &pollVal) == CL_SUCCESS)
         {
             int nextVal = (lastVal + 1) % LOOP_MAX_VAL;
-            if(pollVal != nextVal)
+            if (pollVal != nextVal)
             {
                 asyncTestResult = CL_FAILED;
                 pthread_exit(NULL);
@@ -122,7 +189,7 @@ static void* PollThread(void *arg)
             // fflush(stdout);
         }
 
-        if(slowPoll)
+        if (slowPoll)
             select_sleep(0, 10000);
         else
             select_sleep(0, 1000);
@@ -137,18 +204,18 @@ static CL_RESULT AsyncTest(void)
     int count = 0;
     while (1)
     {
-        for(int i = 0; i < LOOP_MAX_VAL; i++)
+        for (int i = 0; i < LOOP_MAX_VAL; i++)
         {
-            while(CL_QueueAdd(&async_q, &i) != CL_SUCCESS)
+            while (CL_QueueAdd(&async_q, &i) != CL_SUCCESS)
             {
                 select_sleep(0, 5000);
-                if(asyncTestResult != CL_SUCCESS || count > addTimes)
+                if (asyncTestResult != CL_SUCCESS || count > addTimes)
                 {
                     pthread_cancel(pollThr);
                     return asyncTestResult;
                 }
 
-                if(count > addTimes / 2)
+                if (count > addTimes / 2)
                 {
                     slowPoll = CL_TRUE;
                 }
@@ -162,6 +229,7 @@ typedef CL_RESULT (*TestFunc)(void);
 
 TestFunc testCases[] = {
     ForeachTest,
+    LengthTest,
     // AsyncTest,
 };
 
@@ -177,5 +245,5 @@ int main(int argc, char **argv)
     }
 
     printf("queue all test ok\n");
-    return 0;    
+    return 0;
 }
