@@ -29,7 +29,7 @@ typedef enum
 
 } CL_RESULT;
 
-#define CL_NULL             (0)
+#define CL_NULL             ((void*)(0))
 
 #define CL_ARRAY_LENGTH(array)      (sizeof(array) / sizeof(array[0]))
 
@@ -40,6 +40,10 @@ typedef enum
 #else
 #define Log(format, ...)     
 #endif
+
+#define offset_of(type, member) ((uint32_t) &((type *)0)->member)
+
+#define container_of(member_ptr, type, member) ((type *)((char*)member_ptr - offset_of(type, member)))
 
 #ifdef __cplusplus
 }

@@ -5,6 +5,7 @@
         "pthread.h": "c",
         "unistd.h": "c",
         "cl_pool.h": "c",
-        "stdint.h": "c"
+        "stdint.h": "c",
+        "type_traits": "c"
     }
 }
