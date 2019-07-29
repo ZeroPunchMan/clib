@@ -11,15 +11,9 @@ typedef struct CL_ListNode
 
 typedef struct CL_List
 {
-    CL_ListNode_t* head;
+    CL_ListNode_t head;
     uint16_t size;
 } CL_List_t;
-
-#define CL_LIST_DEF_INIT(name, modifer) \
-modifier CL_List_t name = {CL_NULL, 0};
-
-#define CL_LIST_DECL(name) \
-extern CL_List_t name;
 
 void CL_ListInit(CL_List_t* list);
 
@@ -27,6 +21,7 @@ CL_RESULT CL_ListAddLast(CL_List_t* list, CL_ListNode_t* node);
 
 CL_RESULT CL_ListAddFirst(CL_List_t* list, CL_ListNode_t* node);
 
+//this function doesn't check whether node in list
 CL_RESULT CL_ListRemove(CL_List_t* list, CL_ListNode_t* node);
 
 static inline uint16_t CL_ListSize(CL_List_t* list)
@@ -34,28 +29,51 @@ static inline uint16_t CL_ListSize(CL_List_t* list)
     return list->size;
 }
 
-#define CL_LIST_FOR_EACH(list, node_ptr) \
-node_ptr = list->head; \
-for(int __list_count_ = 0; \
-    __list_count_ < list->size; \
-    __list_count_++, node_ptr = list->nextNode)
+//for each
+#define CL_LIST_FOR_EACH(list_ptr, node_ptr) \
+for(node_ptr = (list_ptr)->head.nextNode; node_ptr != &(list_ptr)->head; node_ptr = node_ptr->nextNode)
 
-#define CL_LIST_FOR_EACH_ENTRY(list, ctn_ptr, type, member) \
-CL_ListNode_t* __node_ptr_ = list->head; \
-for(int __list_count_ = 0; \
-    __list_count_ < list->size; \
-    __list_count_++, __node_ptr_ = list->nextNode, ctn_ptr = container_of(__node_ptr_, type, member))
+//for each safe
+#define CL_LIST_FOR_EACH_SAFE(list_ptr, node_ptr) \
+node_ptr = (list_ptr)->head.nextNode; \
+for(CL_ListNode_t* ___next_ptr_ = node_ptr->nextNode; \
+    node_ptr != &(list_ptr)->head; \
+    node_ptr = ___next_ptr_, ___next_ptr_ = ___next_ptr_->nextNode)
 
-#define CL_LIST_FOR_EACH_REVERSE(list, node_ptr) \
-node_ptr = (list->head != CL_NULL) ? list->head->preNode : CL_NULL; \
-for(int __list_count_ = 0; \
-    __list_count_ < list->size; \
-    __list_count_++, node_ptr = list->preNode)
+//for each reverse
+#define CL_LIST_FOR_EACH_REVERSE(list_ptr, node_ptr) \
+for(node_ptr = (list_ptr)->head.preNode; node_ptr != &(list_ptr)->head; node_ptr = node_ptr->preNode)
 
-#define CL_LIST_FOR_EACH_ENTRY_REVERSE(list, ctn_ptr, type, member) \
-CL_ListNode_t* __node_ptr_ = (list->head != CL_NULL) ? list->head->preNode : CL_NULL; \
-for(int __list_count_ = 0; \
-    __list_count_ < list->size; \
-    __list_count_++, __node_ptr_ = list->preNode, ctn_ptr = container_of(__node_ptr_, type, member))
+//for each reverse safe
+#define CL_LIST_FOR_EACH_REVERSE_SAFE(list_ptr, node_ptr) \
+node_ptr = (list_ptr)->head.preNode; \
+for(CL_ListNode_t* ___pre_ptr_ = node_ptr->preNode; \
+    node_ptr != &(list_ptr)->head; \
+    node_ptr = ___pre_ptr_, ___pre_ptr_ = ___pre_ptr_->preNode)
 
-//add safe for each
+//for each entry
+#define CL_LIST_FOR_EACH_ENTRY(list_ptr, ctn_ptr, type, member) \
+for(ctn_ptr = container_of((list_ptr)->head.nextNode, type, member); \
+    &ctn_ptr->member != &(list_ptr)->head; \
+    ctn_ptr = container_of(ctn_ptr->member.nextNode, type, member))
+
+//for each entry safe
+#define CL_LIST_FOR_EACH_ENTRY_SAFE(list_ptr, ctn_ptr, type, member) \
+ctn_ptr = container_of((list_ptr)->head.nextNode, type, member); \
+for(type* ___next_ctn_ = container_of(ctn_ptr->member.nextNode, type, member); \
+    &ctn_ptr->member != &(list_ptr)->head; \
+    ctn_ptr = ___next_ctn_, ___next_ctn_ = container_of(___next_ctn_->member.nextNode, type, member)) 
+
+//for each entry reverse
+#define CL_LIST_FOR_EACH_ENTRY_REVERSE(list_ptr, ctn_ptr, type, member) \
+for(ctn_ptr = container_of((list_ptr)->head.preNode, type, member); \
+    &ctn_ptr->member != &(list_ptr)->head; \
+    ctn_ptr = container_of(ctn_ptr->member.preNode, type, member))
+
+//for each entry reverse safe
+#define CL_LIST_FOR_EACH_ENTRY_REVERSE_SAFE(list_ptr, ctn_ptr, type, member) \
+ctn_ptr = container_of((list_ptr)->head.preNode, type, member); \
+for(type* ___pre_ctn_ = container_of(ctn_ptr->member.preNode, type, member); \
+    &ctn_ptr->member != &(list_ptr)->head; \
+    ctn_ptr = ___pre_ctn_, ___pre_ctn_ = container_of(___pre_ctn_->member.preNode, type, member)) 
+

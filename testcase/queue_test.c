@@ -200,7 +200,7 @@ static CL_RESULT AsyncTest(void)
 {
     pthread_t pollThr;
     pthread_create(&pollThr, NULL, PollThread, NULL);
-    const int addTimes = 500000;
+    const int addTimes = 50000;
     int count = 0;
     while (1)
     {
@@ -209,40 +209,42 @@ static CL_RESULT AsyncTest(void)
             while (CL_QueueAdd(&async_q, &i) != CL_SUCCESS)
             {
                 select_sleep(0, 5000);
-                if (asyncTestResult != CL_SUCCESS || count > addTimes)
+                if (asyncTestResult != CL_SUCCESS)
                 {
-                    pthread_cancel(pollThr);
-                    return asyncTestResult;
-                }
-
-                if (count > addTimes / 2)
-                {
-                    slowPoll = CL_TRUE;
-                }
+                    goto out;
+                }   
             }
+
             count++;
+            if(count % 1000 == 0)
+            {
+                printf("add %d times\n", count);
+            }
+            if (count > addTimes / 2)
+            {
+                slowPoll = CL_TRUE;
+            }
+            if (asyncTestResult != CL_SUCCESS || count > addTimes)
+            {
+                goto out;
+            }  
         }
     }
+
+out: 
+    pthread_cancel(pollThr);
+    return asyncTestResult;
 }
 
 
-TestFunc testCases[] = {
-    ForeachTest,
-    LengthTest,
-    // AsyncTest,
+TestCase_t testCases[] = {
+    {ForeachTest, "for each"},
+    {LengthTest, "length"},
+    {AsyncTest, "async"}
 };
 
 int main(int argc, char **argv)
 {
-    for (int i = 0; i < CL_ARRAY_LENGTH(testCases); i++)
-    {
-        if (testCases[i]() != CL_SUCCESS)
-        {
-            printf("queue test failed at %d\n", i);
-            return 0;
-        }
-    }
-
-    printf("queue all test ok\n");
+    TEST_CASE_PROC(testCases, "queue");
     return 0;
 }

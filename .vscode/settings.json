@@ -6,6 +6,9 @@
         "unistd.h": "c",
         "cl_pool.h": "c",
         "stdint.h": "c",
-        "type_traits": "c"
+        "type_traits": "c",
+        "cl_list.h": "c",
+        "test_common.h": "c",
+        "typeinfo": "c"
     }
 }

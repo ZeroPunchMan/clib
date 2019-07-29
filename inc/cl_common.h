@@ -41,9 +41,9 @@ typedef enum
 #define Log(format, ...)     
 #endif
 
-#define offset_of(type, member) ((uint32_t) &((type *)0)->member)
+#define offset_of(type, member) ((size_t) &((type *)0)->member)
 
-#define container_of(member_ptr, type, member) ((type *)((char*)member_ptr - offset_of(type, member)))
+#define container_of(member_ptr, type, member) ((type *)((char*)(member_ptr) - offset_of(type, member)))
 
 #ifdef __cplusplus
 }

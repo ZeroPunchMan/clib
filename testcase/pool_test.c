@@ -133,21 +133,13 @@ CL_RESULT EmptyFullTest(void)
     return CL_SUCCESS;
 }
 
-TestFunc testCases[] = {
-    EmptyFullTest,
-    RandomTest,
+TestCase_t testCases[] = {
+    {EmptyFullTest, "empty full"},
+    {RandomTest, "random"}
 };
+
 int main(int argc, char **argv)
 {
-    for (int i = 0; i < CL_ARRAY_LENGTH(testCases); i++)
-    {
-        if (testCases[i]() != CL_SUCCESS)
-        {
-            printf("pool test failed at %d\n", i);
-            return 0;
-        }
-    }
-
-    printf("pool all test ok\n");
+    TEST_CASE_PROC(testCases, "pool");
     return 0;
 }

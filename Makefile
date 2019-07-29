@@ -16,10 +16,11 @@ SrcPath := $(shell for src in $(shell ls ./src); do echo -e $(SrcDir)/$$src; don
 OutputDir := ./build/debug/
 
 # add test case here
-TestCases := queue_test pool_test
+#TestCases := queue_test pool_test
+TestCases := pool_test
 TestCaseDir := $(CurDir)/testcase/
 
-DBG ?= 1
+DBG ?= -g
 
 # test:
 # 	@echo $(Ojects)
@@ -33,7 +34,7 @@ genslib: $(HeadPath) $(SrcPath)
 	@echo gen slib
 	@mkdir -vp $(OutputDir)
 	@for src in $(Sources); do\
-		gcc -std=c99 -I $(IncDir) -c $(SrcDir)/$$src -o $(OutputDir)/$${src/%.c/.o};\
+		gcc -g -std=c99 -I $(IncDir) -c $(SrcDir)/$$src -o $(OutputDir)/$${src/%.c/.o};\
 	done  
 	@rm -f $(OutputDir)/*.a
 	@for obj in $(Ojects); do\
@@ -42,9 +43,9 @@ genslib: $(HeadPath) $(SrcPath)
 
 testcase: FORCE genslib 
 	@for tc in $(TestCases); do\
-		echo start $${tc}...; \
-		gcc -std=c99 -I $(IncDir) -c $(TestCaseDir)/$${tc}.c -o  $(OutputDir)/$${tc}.o; \
-		gcc $(OutputDir)/$${tc}.o -std=c99 -I $(IncDir) -L$(OutputDir) -l$(LibLink)  -o $(OutputDir)/$${tc}.exe; \
+		echo ----start $${tc}----; \
+		gcc -g -std=c99 -I $(IncDir) -c $(TestCaseDir)/$${tc}.c -o  $(OutputDir)/$${tc}.o; \
+		gcc -g $(OutputDir)/$${tc}.o -std=c99 -I $(IncDir) -L$(OutputDir) -l$(LibLink)  -o $(OutputDir)/$${tc}.exe; \
 		$(OutputDir)/$${tc}.exe; \
 	done
 
