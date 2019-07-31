@@ -147,17 +147,35 @@ CL_RESULT ListTest(void)
     CL_LIST_FOR_EACH_REVERSE_SAFE(&testList, pNode)
     {
         pCtn = container_of(pNode, TestStruct_t, node);
+        CL_ListRemove(&testList, &pCtn->node);
         if(CL_POOL_FREE(&testPool, pCtn) != CL_SUCCESS)
         {
             return CL_FAILED;
         }
+    } 
+
+    //list should be empty
+    CL_LIST_FOR_EACH_ENTRY(&testList, pCtn, TestStruct_t, node)
+    {
+        return CL_FAILED;
+    }
+
+    CL_LIST_FOR_EACH_REVERSE(&testList, pNode)
+    {
+        return CL_FAILED;
     }
 
     return CL_PoolFullCheck(&testPool);
 }
 
+
+CL_RESULT EasyTest(void)
+{
+
+}
+
 TestCase_t testCases[] = {
-    {ListTest, "add last"},
+    {ListTest, "list test"},
 };
 
 int main(int argc, char **argv)
