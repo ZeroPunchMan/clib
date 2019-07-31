@@ -17,7 +17,7 @@ OutputDir := ./build/debug/
 
 # add test case here
 #TestCases := queue_test pool_test
-TestCases := pool_test
+TestCases := list_test
 TestCaseDir := $(CurDir)/testcase/
 
 DBG ?= -g

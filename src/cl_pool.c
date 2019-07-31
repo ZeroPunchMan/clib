@@ -9,9 +9,13 @@ void CL_PoolInit(CL_Pool_t *pool)
     }
 }
 
-void *CL_PoolAlloc(CL_Pool_t *pool)
+void *CL_PoolAlloc(CL_Pool_t *pool, uint16_t cellSize)
 {
     void *result = CL_NULL;
+
+    if(cellSize != pool->cellSize)
+        return result;
+        
     if (pool->freeCount > 0)
     {
         uint16_t cellIdx;
@@ -61,6 +65,7 @@ CL_RESULT CL_PoolFullCheck(CL_Pool_t *pool)
         {
             return CL_FAILED;
         }
+        // printf("%d: %d\n", i, flags[i]);
     }
     return CL_SUCCESS;
 }

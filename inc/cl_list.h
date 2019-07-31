@@ -12,22 +12,20 @@ typedef struct CL_ListNode
 typedef struct CL_List
 {
     CL_ListNode_t head;
-    uint16_t size;
 } CL_List_t;
 
 void CL_ListInit(CL_List_t* list);
 
-CL_RESULT CL_ListAddLast(CL_List_t* list, CL_ListNode_t* node);
+CL_RESULT CL_ListAddLast(CL_List_t* list, CL_ListNode_t* newNode);
 
-CL_RESULT CL_ListAddFirst(CL_List_t* list, CL_ListNode_t* node);
+CL_RESULT CL_ListAddFirst(CL_List_t* list, CL_ListNode_t* newNode);
+
+CL_RESULT CL_ListAddAfter(CL_ListNode_t *node, CL_ListNode_t *newNode);
+
+CL_RESULT CL_ListAddBefore(CL_ListNode_t *node, CL_ListNode_t *newNode);
 
 //this function doesn't check whether node in list
-CL_RESULT CL_ListRemove(CL_List_t* list, CL_ListNode_t* node);
-
-static inline uint16_t CL_ListSize(CL_List_t* list)
-{
-    return list->size;
-}
+CL_RESULT CL_ListRemove(CL_List_t* list, CL_ListNode_t* rmNode);
 
 //for each
 #define CL_LIST_FOR_EACH(list_ptr, node_ptr) \
