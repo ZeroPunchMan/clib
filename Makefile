@@ -16,8 +16,8 @@ SrcPath := $(shell for src in $(shell ls ./src); do echo -e $(SrcDir)/$$src; don
 OutputDir := ./build/debug/
 
 # add test case here
-#TestCases := queue_test pool_test
-TestCases := list_test
+TestCases := queue_test pool_test list_test
+# TestCases := list_test
 TestCaseDir := $(CurDir)/testcase/
 
 DBG ?= -g

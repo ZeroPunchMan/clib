@@ -83,5 +83,5 @@ CL_RESULT CL_ListRemove(CL_List_t *list, CL_ListNode_t *node)
     preNode->nextNode = nextNode;
     nextNode->preNode = preNode;
 
-    return CL_FAILED;
+    return CL_SUCCESS;
 }

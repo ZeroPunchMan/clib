@@ -200,7 +200,7 @@ static CL_RESULT AsyncTest(void)
 {
     pthread_t pollThr;
     pthread_create(&pollThr, NULL, PollThread, NULL);
-    const int addTimes = 50000;
+    const int addTimes = 30000;
     int count = 0;
     while (1)
     {

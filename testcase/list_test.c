@@ -56,7 +56,10 @@ CL_RESULT ListTest(void)
         pCtn = container_of(pNode, TestStruct_t, node);
         if (pCtn->a % 2 == 0)
         {
-            CL_ListRemove(&testList, pNode);
+            if (CL_ListRemove(&testList, pNode) != CL_SUCCESS)
+            {
+                return CL_FAILED;
+            }
             if (CL_POOL_FREE(&testPool, pCtn) != CL_SUCCESS)
             {
                 return CL_FAILED;
@@ -96,7 +99,7 @@ CL_RESULT ListTest(void)
         // printf("%d\n", pCtn->a);
         count--;
     }
-    if(count != -1)
+    if (count != -1)
     {
         return CL_FAILED;
     }
@@ -106,8 +109,14 @@ CL_RESULT ListTest(void)
     {
         if (pCtn->a % 2 != 0)
         {
-            CL_ListRemove(&testList, &pCtn->node);
-            CL_POOL_FREE(&testPool, pCtn);
+            if (CL_ListRemove(&testList, &pCtn->node) != CL_SUCCESS)
+            {
+                return CL_FAILED;
+            }
+            if (CL_POOL_FREE(&testPool, pCtn) != CL_SUCCESS)
+            {
+                return CL_FAILED;
+            }
         }
     }
 
@@ -132,14 +141,14 @@ CL_RESULT ListTest(void)
     count = TEST_POOL_SIZE - 1;
     CL_LIST_FOR_EACH_ENTRY_REVERSE(&testList, pCtn, TestStruct_t, node)
     {
-        if(pCtn->a != count || pCtn->b != count)
+        if (pCtn->a != count || pCtn->b != count)
         {
             return CL_FAILED;
         }
         count--;
         // printf("%d\n", pCtn->a);
     }
-    if(count != -1)
+    if (count != -1)
     {
         return CL_FAILED;
     }
@@ -147,12 +156,15 @@ CL_RESULT ListTest(void)
     CL_LIST_FOR_EACH_REVERSE_SAFE(&testList, pNode)
     {
         pCtn = container_of(pNode, TestStruct_t, node);
-        CL_ListRemove(&testList, &pCtn->node);
-        if(CL_POOL_FREE(&testPool, pCtn) != CL_SUCCESS)
+        if (CL_ListRemove(&testList, &pCtn->node) != CL_SUCCESS)
         {
             return CL_FAILED;
         }
-    } 
+        if (CL_POOL_FREE(&testPool, pCtn) != CL_SUCCESS)
+        {
+            return CL_FAILED;
+        }
+    }
 
     //list should be empty
     CL_LIST_FOR_EACH_ENTRY(&testList, pCtn, TestStruct_t, node)
@@ -168,14 +180,12 @@ CL_RESULT ListTest(void)
     return CL_PoolFullCheck(&testPool);
 }
 
-
 CL_RESULT EasyTest(void)
 {
-
 }
 
 TestCase_t testCases[] = {
-    {ListTest, "list test"},
+    {ListTest, "odd-even"},
 };
 
 int main(int argc, char **argv)

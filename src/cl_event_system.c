@@ -28,16 +28,16 @@ CL_RESULT CL_EventSysAddListener(CL_EventCallBack cb, int event, int session)
         return CL_INVALID_PARAM;
     }
 
-    Listener_t *listener = CL_POOL_ALLOC(&lsrPool, Listener_t);
-    if (listener != CL_NULL)
+    Listener_t *pLsr = CL_POOL_ALLOC(&lsrPool, Listener_t);
+    if (pLsr == CL_NULL)
     {
         return CL_FAILED;
     }
 
-    listener->callBack = cb;
-    listener->session = session;
+    pLsr->callBack = cb;
+    pLsr->session = session;
 
-    CL_ListAddLast(&lsrListArray[event], &listener->node);
+    return CL_ListAddLast(&lsrListArray[event], &pLsr->node);
 }
 
 CL_RESULT CL_EventSysRemoveListener(CL_EventCallBack cb, int event, int session)
@@ -53,7 +53,17 @@ CL_RESULT CL_EventSysRemoveListener(CL_EventCallBack cb, int event, int session)
     {
         if(pLsr->callBack == cb && pLsr->session == session)
         {
-            CL_ListRemove(lsrList, &pLsr->node);
+            CL_RESULT res;
+            res = CL_ListRemove(lsrList, &pLsr->node);
+            if(res != CL_SUCCESS)
+            {
+                return res;
+            }
+            res = CL_POOL_FREE(&lsrPool, pLsr);
+            if(res != CL_SUCCESS)
+            {
+                return res;
+            }
             return CL_SUCCESS;
         }
     }
@@ -80,3 +90,4 @@ CL_RESULT CL_EventSysRaise(int event, int session, void *eventArg)
 
     return CL_SUCCESS;
 }
+
