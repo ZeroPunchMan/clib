@@ -2,6 +2,11 @@
 
 #include "cl_common.h"
 
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef enum
 {
     CL_TestEvent0 = 0,
@@ -13,3 +18,6 @@ typedef enum
 } CL_Event_t;
 
 
+#ifdef __cplusplus
+}
+#endif

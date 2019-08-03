@@ -2,6 +2,10 @@
 
 #include "cl_common.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef struct
 {
     uint16_t cellSize;
@@ -34,3 +38,6 @@ CL_RESULT CL_PoolFree(CL_Pool_t* pool, void* pCell);
 CL_RESULT CL_PoolFullCheck(CL_Pool_t *pool);
 #endif
 
+#ifdef __cplusplus
+}
+#endif

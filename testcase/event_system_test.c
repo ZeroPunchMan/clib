@@ -105,6 +105,13 @@ CL_RESULT EventSysTest(void)
     int32_t eventArg;
     CL_EventSysInit();
 
+    CL_RESULT res;
+    res = CL_EventCleanCheck();
+    if(res != CL_SUCCESS)
+    {
+        return res;
+    }
+
     for (int i = 0; i < TEST_SIZE; i++)
     {
         for (int k = 0; k < TEST_SIZE; k++)
@@ -245,7 +252,24 @@ CL_RESULT EventSysTest(void)
         }
     }
 
-    return CL_SUCCESS;
+    //remove all listener
+    for (int i = 0; i < TEST_SIZE; i++)
+    {
+        for (int k = 0; k < TEST_SIZE; k++)
+        {
+            if(cbLsnFlags[i][k] != CL_FALSE)
+            {
+                res = CL_EventSysRemoveListener(testStructs[i][k].callback, i, k);
+                if(res != CL_SUCCESS)
+                {
+                    return res;
+                }
+                cbLsnFlags[i][k] = CL_FALSE;
+            }
+        }
+    }
+
+    return CL_EventCleanCheck();
 }
 
 

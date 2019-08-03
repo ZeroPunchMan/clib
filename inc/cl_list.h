@@ -2,6 +2,10 @@
 
 #include "cl_common.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 //linked loop list
 typedef struct CL_ListNode
 {
@@ -75,3 +79,7 @@ for(type* ___pre_ctn_ = container_of(ctn_ptr->member.preNode, type, member); \
     &ctn_ptr->member != &(list_ptr)->head; \
     ctn_ptr = ___pre_ctn_, ___pre_ctn_ = container_of(___pre_ctn_->member.preNode, type, member)) 
 
+
+#ifdef __cplusplus
+}
+#endif

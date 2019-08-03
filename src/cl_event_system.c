@@ -47,20 +47,20 @@ CL_RESULT CL_EventSysRemoveListener(CL_EventCallBack_t cb, CL_Event_t event, int
         return CL_INVALID_PARAM;
     }
 
-    CL_List_t* lsrList = &lsrListArray[event];
-    Listener_t* pLsr;
+    CL_List_t *lsrList = &lsrListArray[event];
+    Listener_t *pLsr;
     CL_LIST_FOR_EACH_ENTRY_SAFE(lsrList, pLsr, Listener_t, node)
     {
-        if(pLsr->callBack == cb && pLsr->session == session)
+        if (pLsr->callBack == cb && pLsr->session == session)
         {
             CL_RESULT res;
             res = CL_ListRemove(lsrList, &pLsr->node);
-            if(res != CL_SUCCESS)
+            if (res != CL_SUCCESS)
             {
                 return res;
             }
             res = CL_POOL_FREE(&lsrPool, pLsr);
-            if(res != CL_SUCCESS)
+            if (res != CL_SUCCESS)
             {
                 return res;
             }
@@ -78,11 +78,11 @@ CL_RESULT CL_EventSysRaise(CL_Event_t event, int session, void *eventArg)
         return CL_INVALID_PARAM;
     }
 
-    CL_List_t* lsrList = &lsrListArray[event];
-    Listener_t* pLsr;
+    CL_List_t *lsrList = &lsrListArray[event];
+    Listener_t *pLsr;
     CL_LIST_FOR_EACH_ENTRY(lsrList, pLsr, Listener_t, node)
     {
-        if(pLsr->session == session)
+        if (pLsr->session == session)
         {
             pLsr->callBack(eventArg);
         }
@@ -91,3 +91,19 @@ CL_RESULT CL_EventSysRaise(CL_Event_t event, int session, void *eventArg)
     return CL_SUCCESS;
 }
 
+CL_RESULT CL_EventCleanCheck(void)
+{
+    for (int i = 0; i < CL_EventMax; i++)
+    {
+        CL_List_t *lsrList = &lsrListArray[i];
+        Listener_t *pLsr;
+
+        // printf("check event %d\n", i);
+        CL_LIST_FOR_EACH_ENTRY(lsrList, pLsr, Listener_t, node)
+        {
+            return CL_FAILED;
+        }
+    }
+
+    return CL_PoolFullCheck(&lsrPool);
+}

@@ -49,7 +49,7 @@ CL_RESULT CL_PoolFree(CL_Pool_t *pool, void *pCell)
 CL_RESULT CL_PoolFullCheck(CL_Pool_t *pool)
 {
     if(pool->capacity != pool->freeCount)
-        return CL_FALSE;
+        return CL_FAILED;
 
     uint8_t* flags = malloc(pool->capacity);
     memset(flags, 0, pool->capacity);
