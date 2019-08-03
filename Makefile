@@ -16,8 +16,8 @@ SrcPath := $(shell for src in $(shell ls ./src); do echo -e $(SrcDir)/$$src; don
 OutputDir := ./build/debug/
 
 # add test case here
-TestCases := queue_test pool_test list_test
-# TestCases := list_test
+TestCases := queue_test pool_test list_test event_system_test
+# TestCases := event_system_test
 TestCaseDir := $(CurDir)/testcase/
 
 DBG ?= -g
@@ -31,7 +31,7 @@ all: testcase
 	
 
 genslib: $(HeadPath) $(SrcPath)
-	@echo gen slib
+	@echo generating static library
 	@mkdir -vp $(OutputDir)
 	@for src in $(Sources); do\
 		gcc -g -std=c99 -I $(IncDir) -c $(SrcDir)/$$src -o $(OutputDir)/$${src/%.c/.o};\

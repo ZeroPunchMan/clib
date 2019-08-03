@@ -5,25 +5,25 @@
 typedef struct
 {
     CL_ListNode_t node;
-    CL_EventCallBack callBack;
+    CL_EventCallBack_t callBack;
     int session;
 } Listener_t;
 
-CL_POOL_DEFINE(lsrPool, CL_EVENT_MAX_NUM * 2, Listener_t, static);
+CL_POOL_DEFINE(lsrPool, CL_EventMax * 10, Listener_t, static);
 
-static CL_List_t lsrListArray[CL_EVENT_MAX_NUM];
+static CL_List_t lsrListArray[CL_EventMax];
 void CL_EventSysInit(void)
 {
     CL_PoolInit(&lsrPool);
-    for (int i = 0; i < CL_EVENT_MAX_NUM; i++)
+    for (int i = 0; i < CL_EventMax; i++)
     {
         CL_ListInit(&lsrListArray[i]);
     }
 }
 
-CL_RESULT CL_EventSysAddListener(CL_EventCallBack cb, int event, int session)
+CL_RESULT CL_EventSysAddListener(CL_EventCallBack_t cb, CL_Event_t event, int session)
 {
-    if (event >= CL_EVENT_MAX_NUM)
+    if (event >= CL_EventMax)
     {
         return CL_INVALID_PARAM;
     }
@@ -40,9 +40,9 @@ CL_RESULT CL_EventSysAddListener(CL_EventCallBack cb, int event, int session)
     return CL_ListAddLast(&lsrListArray[event], &pLsr->node);
 }
 
-CL_RESULT CL_EventSysRemoveListener(CL_EventCallBack cb, int event, int session)
+CL_RESULT CL_EventSysRemoveListener(CL_EventCallBack_t cb, CL_Event_t event, int session)
 {
-    if (event >= CL_EVENT_MAX_NUM)
+    if (event >= CL_EventMax)
     {
         return CL_INVALID_PARAM;
     }
@@ -71,9 +71,9 @@ CL_RESULT CL_EventSysRemoveListener(CL_EventCallBack cb, int event, int session)
     return CL_FAILED;
 }
 
-CL_RESULT CL_EventSysRaise(int event, int session, void *eventArg)
+CL_RESULT CL_EventSysRaise(CL_Event_t event, int session, void *eventArg)
 {
-    if (event >= CL_EVENT_MAX_NUM)
+    if (event >= CL_EventMax)
     {
         return CL_INVALID_PARAM;
     }

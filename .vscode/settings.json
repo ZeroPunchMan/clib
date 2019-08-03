@@ -9,6 +9,9 @@
         "type_traits": "c",
         "cl_list.h": "c",
         "test_common.h": "c",
-        "typeinfo": "c"
+        "typeinfo": "c",
+        "cl_event_system.h": "c",
+        "cl_event_type.h": "c",
+        "cpl_list.h": "c"
     }
 }

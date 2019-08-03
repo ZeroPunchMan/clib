@@ -1,12 +1,14 @@
 #pragma once
 
 #include "cl_common.h"
+#include "cl_event_type.h"
 
-#define CL_EVENT_MAX_NUM    20
-
-typedef CL_BOOL (*CL_EventCallBack)(void* eventArg);
+typedef CL_BOOL (*CL_EventCallBack_t)(void* eventArg);
 
 void CL_EventSysInit(void);
-CL_RESULT CL_EventSysAddListener(CL_EventCallBack cb, int event, int session);
-CL_RESULT CL_EventSysRemoveListener(CL_EventCallBack cb, int event, int session);
-CL_RESULT CL_EventSysRaise(int event, int session, void *eventArg);
+
+CL_RESULT CL_EventSysAddListener(CL_EventCallBack_t cb, CL_Event_t event, int session);
+
+CL_RESULT CL_EventSysRemoveListener(CL_EventCallBack_t cb, CL_Event_t event, int session);
+
+CL_RESULT CL_EventSysRaise(CL_Event_t event, int session, void *eventArg);

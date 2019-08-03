@@ -22,3 +22,11 @@ for (int i = 0; i < CL_ARRAY_LENGTH(testCases); i++) \
     printf("%s test %s ok...\n", target_name, testCases[i].desc); \
 }   \
 printf("%s all test ok...\n", target_name); 
+
+// #define __DEBUG
+
+#ifdef __DEBUG
+#define DebugLog(format, ...)   printf(format, ##__VA_ARGS__)
+#else
+#define DebugLog(format, ...)
+#endif
