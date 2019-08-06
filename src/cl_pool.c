@@ -22,7 +22,7 @@ void *CL_PoolAlloc(CL_Pool_t *pool, uint16_t cellSize)
         pool->freeCount--;
         cellIdx = pool->idxBuff[pool->freeCount];
 
-        result = pool->memBuff + cellIdx * pool->cellSize;
+        result = (void *)((char*)pool->memBuff + cellIdx * pool->cellSize);
     }
 
     return result;
@@ -33,7 +33,7 @@ CL_RESULT CL_PoolFree(CL_Pool_t *pool, void *pCell)
     if(pCell < pool->memBuff || pool->freeCount >= pool->capacity)
         return CL_INVALID_PARAM;
 
-    uint32_t addrOffset = pCell - pool->memBuff;
+    uint32_t addrOffset = (char *)pCell - (char *)pool->memBuff;
     if((addrOffset % pool->cellSize) != 0)
         return CL_INVALID_PARAM;
 
@@ -56,7 +56,7 @@ CL_RESULT CL_PoolFullCheck(CL_Pool_t *pool)
     for(int i = 0; i < pool->capacity; i++)
     {
         uint16_t idx = pool->idxBuff[i];
-        flags[i]++;
+        flags[idx]++;
     }
 
     for(int i = 0; i < pool->capacity; i++)

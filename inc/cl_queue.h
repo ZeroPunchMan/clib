@@ -28,6 +28,8 @@ extern "C"
 
     CL_RESULT CL_QueuePoll(CL_QueueInfo_t *q, void *data);
 
+    CL_RESULT CL_QueuePeek(CL_QueueInfo_t *q, void *data);
+
     static inline void CL_QueueClear(CL_QueueInfo_t *q)
     {
         q->head = q->tail = 0;
