@@ -5,7 +5,7 @@
 
 #define TEST_CB_DEF(event, session)                            \
     static int CbCalled_##event##_##session = 0;               \
-    static CL_BOOL EventCb_##event##_##session(void *eventArg) \
+    static bool EventCb_##event##_##session(void *eventArg) \
     {                                                          \
         CbCalled_##event##_##session++;                        \
         int32_t *pInt = (int32_t *)eventArg;                   \
@@ -97,7 +97,7 @@ TestStruct_t testStructs[TEST_SIZE][TEST_SIZE] = {
         TEST_STRUCT_REF(4, 4),
     }};
 
-CL_BOOL cbLsnFlags[TEST_SIZE][TEST_SIZE];
+bool cbLsnFlags[TEST_SIZE][TEST_SIZE];
 
 CL_RESULT EventSysTest(void)
 {
@@ -121,7 +121,7 @@ CL_RESULT EventSysTest(void)
                 DebugLog("add failed at %d--%d\n", i, k);
                 return CL_FAILED;
             }
-            cbLsnFlags[i][k] = CL_TRUE;
+            cbLsnFlags[i][k] = true;
         }
     }
 
@@ -148,19 +148,19 @@ CL_RESULT EventSysTest(void)
         if (r == 0)
         { //add
             DebugLog("add: %d, %d\n", e, s);
-            if (cbLsnFlags[e][s] == CL_FALSE)
+            if (cbLsnFlags[e][s] == false)
             {
                 CL_EventSysAddListener(testStructs[e][s].callback, e, s);
-                cbLsnFlags[e][s] = CL_TRUE;
+                cbLsnFlags[e][s] = true;
             }
         }
         else if (r == 1)
         { //remove
             DebugLog("remove: %d, %d\n", e, s);
-            if (cbLsnFlags[e][s] == CL_TRUE)
+            if (cbLsnFlags[e][s] == true)
             {
                 CL_EventSysRemoveListener(testStructs[e][s].callback, e, s);
-                cbLsnFlags[e][s] = CL_FALSE;
+                cbLsnFlags[e][s] = false;
             }
         }
         else
@@ -189,7 +189,7 @@ CL_RESULT EventSysTest(void)
         }
 
         DebugLog("event arg: %d\n", eventArg);
-        if (cbLsnFlags[e][s] == CL_TRUE)
+        if (cbLsnFlags[e][s] == true)
         {
             if (eventArg != e * s)
             {
@@ -206,7 +206,7 @@ CL_RESULT EventSysTest(void)
             }
         }
 
-        if (cbLsnFlags[e][s] == CL_TRUE)
+        if (cbLsnFlags[e][s] == true)
         { //listened the event
             DebugLog("**********************\n");
             for (int k = 0; k < TEST_SIZE; k++)
@@ -257,14 +257,14 @@ CL_RESULT EventSysTest(void)
     {
         for (int k = 0; k < TEST_SIZE; k++)
         {
-            if(cbLsnFlags[i][k] != CL_FALSE)
+            if(cbLsnFlags[i][k] != false)
             {
                 res = CL_EventSysRemoveListener(testStructs[i][k].callback, i, k);
                 if(res != CL_SUCCESS)
                 {
                     return res;
                 }
-                cbLsnFlags[i][k] = CL_FALSE;
+                cbLsnFlags[i][k] = false;
             }
         }
     }

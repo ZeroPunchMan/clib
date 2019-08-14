@@ -39,21 +39,21 @@ CL_RESULT CL_QueuePeek(CL_QueueInfo_t *q, void *data)
     return CL_SUCCESS;
 }
 
-CL_BOOL CL_QueueEmpty(CL_QueueInfo_t *q)
+bool CL_QueueEmpty(CL_QueueInfo_t *q)
 {
     if (q->head == q->tail)
-        return CL_TRUE;
+        return true;
 
-    return CL_FALSE;
+    return false;
 }
 
-CL_BOOL CL_QueueFull(CL_QueueInfo_t *q)
+bool CL_QueueFull(CL_QueueInfo_t *q)
 {
     uint16_t nextTail = NextPos(q->tail, q->capacity);
     if (nextTail == q->head)
-        return CL_TRUE;
+        return true;
 
-    return CL_FALSE;
+    return false;
 }
 
 uint16_t CL_QueueLength(CL_QueueInfo_t *q)

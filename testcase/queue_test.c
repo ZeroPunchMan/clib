@@ -161,7 +161,7 @@ void select_sleep(time_t sec, suseconds_t us)
     select(0, NULL, NULL, NULL, &timeout);
 }
 
-static CL_BOOL slowPoll = CL_FALSE;
+static bool slowPoll = false;
 static CL_RESULT asyncTestResult = CL_SUCCESS;
 #define LOOP_MAX_VAL 10
 CL_QUEUE_DEF_INIT(async_q, 100, int, static);
@@ -222,7 +222,7 @@ static CL_RESULT AsyncTest(void)
             }
             if (count > addTimes / 2)
             {
-                slowPoll = CL_TRUE;
+                slowPoll = true;
             }
             if (asyncTestResult != CL_SUCCESS || count > addTimes)
             {

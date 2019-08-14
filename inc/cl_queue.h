@@ -40,9 +40,9 @@ extern "C"
         return q->capacity;
     }
 
-    CL_BOOL CL_QueueEmpty(CL_QueueInfo_t *q);
+    bool CL_QueueEmpty(CL_QueueInfo_t *q);
 
-    CL_BOOL CL_QueueFull(CL_QueueInfo_t *q);
+    bool CL_QueueFull(CL_QueueInfo_t *q);
 
     uint16_t CL_QueueLength(CL_QueueInfo_t *q);
 

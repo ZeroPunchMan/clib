@@ -7,7 +7,7 @@
 extern "C" {
 #endif
 
-typedef CL_BOOL (*CL_EventCallBack_t)(void* eventArg);
+typedef bool (*CL_EventCallBack_t)(void* eventArg);
 
 void CL_EventSysInit(void);
 

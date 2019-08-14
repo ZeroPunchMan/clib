@@ -3,6 +3,7 @@
 #include "stdint.h"
 #include "string.h"
 #include "stdio.h"
+#include "stdbool.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -13,12 +14,6 @@ extern "C" {
 #define CL_X64          (64)
 
 #define CL_CPU_TYPE     CL_CORTEX_M3
-
-typedef enum
-{
-    CL_FALSE = 0,
-    CL_TRUE = 1,
-} CL_BOOL;
 
 typedef enum
 {
