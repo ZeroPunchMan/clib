@@ -24,11 +24,11 @@ extern "C"
 #define CL_QUEUE_DECL(q_name) \
     extern CL_QueueInfo_t q_name;
 
-    CL_RESULT CL_QueueAdd(CL_QueueInfo_t *q, void *data);
+    CL_Result_t CL_QueueAdd(CL_QueueInfo_t *q, void *data);
 
-    CL_RESULT CL_QueuePoll(CL_QueueInfo_t *q, void *data);
+    CL_Result_t CL_QueuePoll(CL_QueueInfo_t *q, void *data);
 
-    CL_RESULT CL_QueuePeek(CL_QueueInfo_t *q, void *data);
+    CL_Result_t CL_QueuePeek(CL_QueueInfo_t *q, void *data);
 
     static inline void CL_QueueClear(CL_QueueInfo_t *q)
     {

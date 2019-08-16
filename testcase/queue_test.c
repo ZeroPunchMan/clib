@@ -14,7 +14,7 @@ typedef struct
 
 CL_QUEUE_DEF_INIT(foreach_q, 256, TestStruct, static);
 //*************for each test*************************
-static CL_RESULT ForeachTest(void)
+static CL_Result_t ForeachTest(void)
 {
     TestStruct testStruct;
     testStruct.a = 1;
@@ -53,7 +53,7 @@ static CL_RESULT ForeachTest(void)
     CL_QUEUE_FOR_EACH(&foreach_q, pTS, TestStruct)
     {
         if ((pTS->a) != 0 || pTS->b != count || pTS->c != count)
-            return CL_FAILED;
+            return CL_ResFailed;
 
         // printf("%d, %d, %d\n", pTS->a, pTS->b, pTS->c);
         count++;
@@ -76,25 +76,25 @@ static CL_RESULT ForeachTest(void)
     CL_QUEUE_FOR_EACH(&foreach_q, pTS, TestStruct)
     {
         if ((pTS->a) != 0 || pTS->b != count || pTS->c != count)
-            return CL_FAILED;
+            return CL_ResFailed;
 
         // printf("%d, %d, %d\n", pTS->a, pTS->b, pTS->c);
         count++;
     }
 
-    return CL_SUCCESS;
+    return CL_ResSuccess;
 }
 
 //****************length etc.*************************************
 #define LEN_TEST_CAP    (1024)
 CL_QUEUE_DEF_INIT(len_q, LEN_TEST_CAP, int8_t, static);
-CL_RESULT LengthTest(void)
+CL_Result_t LengthTest(void)
 {
     int8_t data;
     //cap
     if(CL_QueueCapacity(&len_q) != LEN_TEST_CAP)
     {
-        return CL_FAILED;
+        return CL_ResFailed;
     }
     // printf("cap: %d\n", CL_QueueCapacity(&len_q));
 
@@ -106,7 +106,7 @@ CL_RESULT LengthTest(void)
 
     if (CL_QueueLength(&len_q) != CL_QueueCapacity(&len_q) || CL_QueueFreeSpace(&len_q) != 0)
     {
-        return CL_FAILED;
+        return CL_ResFailed;
     }
     // printf("full len: %d, free: %d\n", CL_QueueLength(&len_q), CL_QueueFreeSpace(&len_q));
 
@@ -119,7 +119,7 @@ CL_RESULT LengthTest(void)
 
     if (CL_QueueLength(&len_q) != halfCap || CL_QueueFreeSpace(&len_q) != halfCap)
     {
-        return CL_FAILED;
+        return CL_ResFailed;
     }
     // printf("half len: %d, free: %d\n", CL_QueueLength(&len_q), CL_QueueFreeSpace(&len_q));    
 
@@ -142,12 +142,12 @@ CL_RESULT LengthTest(void)
 
     if (CL_QueueLength(&len_q) != (CL_QueueCapacity(&len_q) - pollCount) || CL_QueueFreeSpace(&len_q) != pollCount)
     {
-        return CL_FAILED;
+        return CL_ResFailed;
     }
     // printf("part len: %d, free: %d\n", CL_QueueLength(&len_q), CL_QueueFreeSpace(&len_q));    
 
 
-    return CL_SUCCESS;
+    return CL_ResSuccess;
 }
 
 //********************async test*******************************
@@ -162,7 +162,7 @@ void select_sleep(time_t sec, suseconds_t us)
 }
 
 static bool slowPoll = false;
-static CL_RESULT asyncTestResult = CL_SUCCESS;
+static CL_Result_t asyncTestResult = CL_ResSuccess;
 #define LOOP_MAX_VAL 10
 CL_QUEUE_DEF_INIT(async_q, 100, int, static);
 static void *PollThread(void *arg)
@@ -171,12 +171,12 @@ static void *PollThread(void *arg)
     while (1)
     {
         int pollVal;
-        if (CL_QueuePoll(&async_q, &pollVal) == CL_SUCCESS)
+        if (CL_QueuePoll(&async_q, &pollVal) == CL_ResSuccess)
         {
             int nextVal = (lastVal + 1) % LOOP_MAX_VAL;
             if (pollVal != nextVal)
             {
-                asyncTestResult = CL_FAILED;
+                asyncTestResult = CL_ResFailed;
                 pthread_exit(NULL);
                 return NULL;
             }
@@ -196,7 +196,7 @@ static void *PollThread(void *arg)
     }
 }
 
-static CL_RESULT AsyncTest(void)
+static CL_Result_t AsyncTest(void)
 {
     pthread_t pollThr;
     pthread_create(&pollThr, NULL, PollThread, NULL);
@@ -206,10 +206,10 @@ static CL_RESULT AsyncTest(void)
     {
         for (int i = 0; i < LOOP_MAX_VAL; i++)
         {
-            while (CL_QueueAdd(&async_q, &i) != CL_SUCCESS)
+            while (CL_QueueAdd(&async_q, &i) != CL_ResSuccess)
             {
                 select_sleep(0, 5000);
-                if (asyncTestResult != CL_SUCCESS)
+                if (asyncTestResult != CL_ResSuccess)
                 {
                     goto out;
                 }   
@@ -224,7 +224,7 @@ static CL_RESULT AsyncTest(void)
             {
                 slowPoll = true;
             }
-            if (asyncTestResult != CL_SUCCESS || count > addTimes)
+            if (asyncTestResult != CL_ResSuccess || count > addTimes)
             {
                 goto out;
             }  

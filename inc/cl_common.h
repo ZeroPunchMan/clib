@@ -17,12 +17,12 @@ extern "C" {
 
 typedef enum
 {
-    CL_SUCCESS = 0,
+    CL_ResSuccess = 0,
 
-    CL_FAILED = -1,
-    CL_INVALID_PARAM = -2,
-
-} CL_RESULT;
+    CL_ResFailed = -1,
+    CL_ResInvalidParam = -2,
+    CL_ResBusy = -3,
+} CL_Result_t;
 
 #define CL_NULL             ((void*)(0))
 

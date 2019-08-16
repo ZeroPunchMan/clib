@@ -8,35 +8,35 @@ static inline uint16_t NextPos(uint16_t ptr, uint16_t max)
     return ptr;
 }
 
-CL_RESULT CL_QueueAdd(CL_QueueInfo_t *q, void *data)
+CL_Result_t CL_QueueAdd(CL_QueueInfo_t *q, void *data)
 {
     if (CL_QueueFull(q))
-        return CL_FAILED;
+        return CL_ResFailed;
 
     DATA_CPY((char *)q->data + (q->tail * q->data_size), data, q->data_size);
     q->tail = NextPos(q->tail, q->capacity);
 
-    return CL_SUCCESS;
+    return CL_ResSuccess;
 }
 
-CL_RESULT CL_QueuePoll(CL_QueueInfo_t *q, void *data)
+CL_Result_t CL_QueuePoll(CL_QueueInfo_t *q, void *data)
 {
     if (CL_QueueEmpty(q))
-        return CL_FAILED;
+        return CL_ResFailed;
     DATA_CPY(data, (char *)q->data + (q->head * q->data_size), q->data_size);
     q->head = NextPos(q->head, q->capacity);
 
-    return CL_SUCCESS;
+    return CL_ResSuccess;
 }
 
-CL_RESULT CL_QueuePeek(CL_QueueInfo_t *q, void *data)
+CL_Result_t CL_QueuePeek(CL_QueueInfo_t *q, void *data)
 {
     if (CL_QueueFull(q))
-        return CL_FAILED;
+        return CL_ResFailed;
 
     DATA_CPY((char *)q->data + (q->tail * q->data_size), data, q->data_size);
 
-    return CL_SUCCESS;
+    return CL_ResSuccess;
 }
 
 bool CL_QueueEmpty(CL_QueueInfo_t *q)

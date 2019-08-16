@@ -12,7 +12,7 @@ typedef struct
 
 #define TEST_POOL_SIZE (200)
 CL_POOL_DEFINE(testPool, TEST_POOL_SIZE, TestStruct_t, static);
-CL_RESULT ListTest(void)
+CL_Result_t ListTest(void)
 {
     CL_PoolInit(&testPool);
     CL_ListInit(&testList);
@@ -43,7 +43,7 @@ CL_RESULT ListTest(void)
         pCtn = container_of(pNode, TestStruct_t, node);
         if (pCtn->a != count || pCtn->b != count)
         {
-            // return CL_FAILED;
+            // return CL_ResFailed;
         }
         // printf("%d\n", pCtn->a);
         count++;
@@ -56,13 +56,13 @@ CL_RESULT ListTest(void)
         pCtn = container_of(pNode, TestStruct_t, node);
         if (pCtn->a % 2 == 0)
         {
-            if (CL_ListRemove(&testList, pNode) != CL_SUCCESS)
+            if (CL_ListRemove(&testList, pNode) != CL_ResSuccess)
             {
-                return CL_FAILED;
+                return CL_ResFailed;
             }
-            if (CL_POOL_FREE(&testPool, pCtn) != CL_SUCCESS)
+            if (CL_POOL_FREE(&testPool, pCtn) != CL_ResSuccess)
             {
-                return CL_FAILED;
+                return CL_ResFailed;
             }
             // printf("ctn: %d, node: %d\n", pCtn, pNode);
         }
@@ -74,7 +74,7 @@ CL_RESULT ListTest(void)
         pCtn = container_of(pNode, TestStruct_t, node);
         if (pCtn->a != count || pCtn->b != count)
         {
-            return CL_FAILED;
+            return CL_ResFailed;
         }
         // printf("%d\n", pCtn->a);
         count += 2;
@@ -94,14 +94,14 @@ CL_RESULT ListTest(void)
         pCtn = container_of(pNode, TestStruct_t, node);
         if (pCtn->a != count || pCtn->b != count)
         {
-            return CL_FAILED;
+            return CL_ResFailed;
         }
         // printf("%d\n", pCtn->a);
         count--;
     }
     if (count != -1)
     {
-        return CL_FAILED;
+        return CL_ResFailed;
     }
 
     //remove odd number
@@ -109,13 +109,13 @@ CL_RESULT ListTest(void)
     {
         if (pCtn->a % 2 != 0)
         {
-            if (CL_ListRemove(&testList, &pCtn->node) != CL_SUCCESS)
+            if (CL_ListRemove(&testList, &pCtn->node) != CL_ResSuccess)
             {
-                return CL_FAILED;
+                return CL_ResFailed;
             }
-            if (CL_POOL_FREE(&testPool, pCtn) != CL_SUCCESS)
+            if (CL_POOL_FREE(&testPool, pCtn) != CL_ResSuccess)
             {
-                return CL_FAILED;
+                return CL_ResFailed;
             }
         }
     }
@@ -125,7 +125,7 @@ CL_RESULT ListTest(void)
     {
         if (pCtn->a != count || pCtn->b != count)
         {
-            return CL_FAILED;
+            return CL_ResFailed;
         }
         count += 2;
         // printf("%d\n", pCtn->a);
@@ -143,44 +143,44 @@ CL_RESULT ListTest(void)
     {
         if (pCtn->a != count || pCtn->b != count)
         {
-            return CL_FAILED;
+            return CL_ResFailed;
         }
         count--;
         // printf("%d\n", pCtn->a);
     }
     if (count != -1)
     {
-        return CL_FAILED;
+        return CL_ResFailed;
     }
 
     CL_LIST_FOR_EACH_REVERSE_SAFE(&testList, pNode)
     {
         pCtn = container_of(pNode, TestStruct_t, node);
-        if (CL_ListRemove(&testList, &pCtn->node) != CL_SUCCESS)
+        if (CL_ListRemove(&testList, &pCtn->node) != CL_ResSuccess)
         {
-            return CL_FAILED;
+            return CL_ResFailed;
         }
-        if (CL_POOL_FREE(&testPool, pCtn) != CL_SUCCESS)
+        if (CL_POOL_FREE(&testPool, pCtn) != CL_ResSuccess)
         {
-            return CL_FAILED;
+            return CL_ResFailed;
         }
     }
 
     //list should be empty
     CL_LIST_FOR_EACH_ENTRY(&testList, pCtn, TestStruct_t, node)
     {
-        return CL_FAILED;
+        return CL_ResFailed;
     }
 
     CL_LIST_FOR_EACH_REVERSE(&testList, pNode)
     {
-        return CL_FAILED;
+        return CL_ResFailed;
     }
 
     return CL_PoolFullCheck(&testPool);
 }
 
-CL_RESULT EasyTest(void)
+CL_Result_t EasyTest(void)
 {
 }
 

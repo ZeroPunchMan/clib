@@ -6,10 +6,10 @@ void CL_ListInit(CL_List_t *list)
     list->head.nextNode = &list->head;
 }
 
-CL_RESULT CL_ListAddLast(CL_List_t *list, CL_ListNode_t *newNode)
+CL_Result_t CL_ListAddLast(CL_List_t *list, CL_ListNode_t *newNode)
 {
     if (list == CL_NULL || newNode == CL_NULL)
-        return CL_INVALID_PARAM;
+        return CL_ResInvalidParam;
 
     CL_ListNode_t *head = &list->head;
     CL_ListNode_t *last = head->preNode;
@@ -18,13 +18,13 @@ CL_RESULT CL_ListAddLast(CL_List_t *list, CL_ListNode_t *newNode)
     newNode->nextNode = head;
     head->preNode = newNode;
 
-    return CL_SUCCESS;
+    return CL_ResSuccess;
 }
 
-CL_RESULT CL_ListAddFirst(CL_List_t *list, CL_ListNode_t *newNode)
+CL_Result_t CL_ListAddFirst(CL_List_t *list, CL_ListNode_t *newNode)
 {
     if (list == CL_NULL || newNode == CL_NULL)
-        return CL_INVALID_PARAM;
+        return CL_ResInvalidParam;
 
     CL_ListNode_t *head = &list->head;
     CL_ListNode_t *next = head->nextNode;
@@ -33,16 +33,16 @@ CL_RESULT CL_ListAddFirst(CL_List_t *list, CL_ListNode_t *newNode)
     next->preNode = newNode;
     newNode->nextNode = next;
 
-    return CL_SUCCESS;
+    return CL_ResSuccess;
 }
 
-CL_RESULT CL_ListAddAfter(CL_ListNode_t *node, CL_ListNode_t *newNode)
+CL_Result_t CL_ListAddAfter(CL_ListNode_t *node, CL_ListNode_t *newNode)
 {
     if (node == CL_NULL || node == CL_NULL)
-        return CL_INVALID_PARAM;
+        return CL_ResInvalidParam;
 
     if (node->preNode == CL_NULL || node->nextNode == CL_NULL)
-        return CL_INVALID_PARAM;
+        return CL_ResInvalidParam;
 
     CL_ListNode_t *next = node->nextNode;
     node->nextNode = newNode;
@@ -50,16 +50,16 @@ CL_RESULT CL_ListAddAfter(CL_ListNode_t *node, CL_ListNode_t *newNode)
     newNode->nextNode = next;
     next->preNode = newNode;
 
-    return CL_SUCCESS;
+    return CL_ResSuccess;
 }
 
-CL_RESULT CL_ListAddBefore(CL_ListNode_t *node, CL_ListNode_t *newNode)
+CL_Result_t CL_ListAddBefore(CL_ListNode_t *node, CL_ListNode_t *newNode)
 {
     if (node == CL_NULL || node == CL_NULL)
-        return CL_INVALID_PARAM;
+        return CL_ResInvalidParam;
 
     if (node->preNode == CL_NULL || node->nextNode == CL_NULL)
-        return CL_INVALID_PARAM;
+        return CL_ResInvalidParam;
 
     CL_ListNode_t* previous = node->preNode;
     previous->nextNode = newNode;
@@ -67,13 +67,13 @@ CL_RESULT CL_ListAddBefore(CL_ListNode_t *node, CL_ListNode_t *newNode)
     newNode->nextNode = node;
     node->preNode = newNode;
 
-    return CL_SUCCESS;
+    return CL_ResSuccess;
 }
 
-CL_RESULT CL_ListRemove(CL_List_t *list, CL_ListNode_t *node)
+CL_Result_t CL_ListRemove(CL_List_t *list, CL_ListNode_t *node)
 {
     if (list == CL_NULL || node == CL_NULL)
-        return CL_INVALID_PARAM;
+        return CL_ResInvalidParam;
 
     CL_ListNode_t *preNode;
     CL_ListNode_t *nextNode;
@@ -83,5 +83,5 @@ CL_RESULT CL_ListRemove(CL_List_t *list, CL_ListNode_t *node)
     preNode->nextNode = nextNode;
     nextNode->preNode = preNode;
 
-    return CL_SUCCESS;
+    return CL_ResSuccess;
 }

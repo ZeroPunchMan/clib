@@ -13,23 +13,23 @@ typedef struct CL_ListNode
     struct CL_ListNode* nextNode;
 } CL_ListNode_t;
 
-typedef struct CL_List
+typedef struct
 {
     CL_ListNode_t head;
 } CL_List_t;
 
 void CL_ListInit(CL_List_t* list);
 
-CL_RESULT CL_ListAddLast(CL_List_t* list, CL_ListNode_t* newNode);
+CL_Result_t CL_ListAddLast(CL_List_t* list, CL_ListNode_t* newNode);
 
-CL_RESULT CL_ListAddFirst(CL_List_t* list, CL_ListNode_t* newNode);
+CL_Result_t CL_ListAddFirst(CL_List_t* list, CL_ListNode_t* newNode);
 
-CL_RESULT CL_ListAddAfter(CL_ListNode_t *node, CL_ListNode_t *newNode);
+CL_Result_t CL_ListAddAfter(CL_ListNode_t *node, CL_ListNode_t *newNode);
 
-CL_RESULT CL_ListAddBefore(CL_ListNode_t *node, CL_ListNode_t *newNode);
+CL_Result_t CL_ListAddBefore(CL_ListNode_t *node, CL_ListNode_t *newNode);
 
 //this function doesn't check whether node in list
-CL_RESULT CL_ListRemove(CL_List_t* list, CL_ListNode_t* rmNode);
+CL_Result_t CL_ListRemove(CL_List_t* list, CL_ListNode_t* rmNode);
 
 //for each
 #define CL_LIST_FOR_EACH(list_ptr, node_ptr) \

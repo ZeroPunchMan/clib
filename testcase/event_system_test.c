@@ -99,15 +99,15 @@ TestStruct_t testStructs[TEST_SIZE][TEST_SIZE] = {
 
 bool cbLsnFlags[TEST_SIZE][TEST_SIZE];
 
-CL_RESULT EventSysTest(void)
+CL_Result_t EventSysTest(void)
 {
     const int testTimes = 500000;
     int32_t eventArg;
     CL_EventSysInit();
 
-    CL_RESULT res;
+    CL_Result_t res;
     res = CL_EventCleanCheck();
-    if(res != CL_SUCCESS)
+    if(res != CL_ResSuccess)
     {
         return res;
     }
@@ -116,10 +116,10 @@ CL_RESULT EventSysTest(void)
     {
         for (int k = 0; k < TEST_SIZE; k++)
         {
-            if (CL_EventSysAddListener(testStructs[i][k].callback, i, k) != CL_SUCCESS)
+            if (CL_EventSysAddListener(testStructs[i][k].callback, i, k) != CL_ResSuccess)
             {
                 DebugLog("add failed at %d--%d\n", i, k);
-                return CL_FAILED;
+                return CL_ResFailed;
             }
             cbLsnFlags[i][k] = true;
         }
@@ -194,7 +194,7 @@ CL_RESULT EventSysTest(void)
             if (eventArg != e * s)
             {
                 DebugLog("event arg error\n");
-                return CL_FAILED;
+                return CL_ResFailed;
             }
         }
         else
@@ -202,7 +202,7 @@ CL_RESULT EventSysTest(void)
             if (eventArg != 0)
             {
                 DebugLog("event arg error2\n");
-                return CL_FAILED;
+                return CL_ResFailed;
             }
         }
 
@@ -222,7 +222,7 @@ CL_RESULT EventSysTest(void)
                     {
                         if (*testStructs[k][m].pCbFlag != 0)
                         {
-                            return CL_FAILED;
+                            return CL_ResFailed;
                         }
                     }
                 }
@@ -231,7 +231,7 @@ CL_RESULT EventSysTest(void)
 
             if (*testStructs[e][s].pCbFlag != raiseTimes)
             {
-                return CL_FAILED;
+                return CL_ResFailed;
             }
         }
         else
@@ -244,7 +244,7 @@ CL_RESULT EventSysTest(void)
                     DebugLog("[%d, %d]: %d\t", k, m, *testStructs[k][m].pCbFlag);
                     if (*testStructs[k][m].pCbFlag != 0)
                     {
-                        return CL_FAILED;
+                        return CL_ResFailed;
                     }
                 }
                 DebugLog("\n");
@@ -260,7 +260,7 @@ CL_RESULT EventSysTest(void)
             if(cbLsnFlags[i][k] != false)
             {
                 res = CL_EventSysRemoveListener(testStructs[i][k].callback, i, k);
-                if(res != CL_SUCCESS)
+                if(res != CL_ResSuccess)
                 {
                     return res;
                 }

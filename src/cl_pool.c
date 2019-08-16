@@ -28,28 +28,28 @@ void *CL_PoolAlloc(CL_Pool_t *pool, uint16_t cellSize)
     return result;
 }
 
-CL_RESULT CL_PoolFree(CL_Pool_t *pool, void *pCell)
+CL_Result_t CL_PoolFree(CL_Pool_t *pool, void *pCell)
 {
     if(pCell < pool->memBuff || pool->freeCount >= pool->capacity)
-        return CL_INVALID_PARAM;
+        return CL_ResInvalidParam;
 
     uint32_t addrOffset = (char *)pCell - (char *)pool->memBuff;
     if((addrOffset % pool->cellSize) != 0)
-        return CL_INVALID_PARAM;
+        return CL_ResInvalidParam;
 
     uint16_t cellIdx = addrOffset / pool->cellSize;
     pool->idxBuff[pool->freeCount++] = cellIdx;
-    return CL_SUCCESS;
+    return CL_ResSuccess;
 }
 
 
 #ifdef USE_POOL_CHECK
 #include "stdlib.h"
 
-CL_RESULT CL_PoolFullCheck(CL_Pool_t *pool)
+CL_Result_t CL_PoolFullCheck(CL_Pool_t *pool)
 {
     if(pool->capacity != pool->freeCount)
-        return CL_FAILED;
+        return CL_ResFailed;
 
     uint8_t* flags = malloc(pool->capacity);
     memset(flags, 0, pool->capacity);
@@ -63,10 +63,10 @@ CL_RESULT CL_PoolFullCheck(CL_Pool_t *pool)
     {
         if(flags[i] != 1)
         {
-            return CL_FAILED;
+            return CL_ResFailed;
         }
         // printf("%d: %d\n", i, flags[i]);
     }
-    return CL_SUCCESS;
+    return CL_ResSuccess;
 }
 #endif

@@ -29,13 +29,13 @@ extern CL_Pool_t name;
 
 void CL_PoolInit(CL_Pool_t* pool);
 void *CL_PoolAlloc(CL_Pool_t *pool, uint16_t cellSize);
-CL_RESULT CL_PoolFree(CL_Pool_t* pool, void* pCell);
+CL_Result_t CL_PoolFree(CL_Pool_t* pool, void* pCell);
 
 
 #define USE_POOL_CHECK
 
 #ifdef USE_POOL_CHECK
-CL_RESULT CL_PoolFullCheck(CL_Pool_t *pool);
+CL_Result_t CL_PoolFullCheck(CL_Pool_t *pool);
 #endif
 
 #ifdef __cplusplus

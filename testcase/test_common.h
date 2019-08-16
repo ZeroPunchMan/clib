@@ -2,7 +2,7 @@
 
 #include "cl_common.h"
 
-typedef CL_RESULT (*TestFunc)(void);
+typedef CL_Result_t (*TestFunc)(void);
 
 typedef struct 
 {
@@ -14,7 +14,7 @@ typedef struct
 #define TEST_CASE_PROC(testCases, target_name) \
 for (int i = 0; i < CL_ARRAY_LENGTH(testCases); i++) \
 {   \
-    if (testCases[i].func() != CL_SUCCESS)   \
+    if (testCases[i].func() != CL_ResSuccess)   \
     {   \
         printf("%s test failed at %s!!!!!!!!!!\n", target_name, testCases[i].desc);  \
         return 0;   \
