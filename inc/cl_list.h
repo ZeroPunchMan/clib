@@ -6,30 +6,37 @@
 extern "C" {
 #endif
 
+
+struct CL_List;
+
 //linked loop list
 typedef struct CL_ListNode
 {
     struct CL_ListNode* preNode;
     struct CL_ListNode* nextNode;
+    struct CL_List* list;
 } CL_ListNode_t;
 
-typedef struct
+typedef struct CL_List
 {
     CL_ListNode_t head;
+    int size;
 } CL_List_t;
 
 void CL_ListInit(CL_List_t* list);
 
 CL_Result_t CL_ListAddLast(CL_List_t* list, CL_ListNode_t* newNode);
-
 CL_Result_t CL_ListAddFirst(CL_List_t* list, CL_ListNode_t* newNode);
-
 CL_Result_t CL_ListAddAfter(CL_ListNode_t *node, CL_ListNode_t *newNode);
-
 CL_Result_t CL_ListAddBefore(CL_ListNode_t *node, CL_ListNode_t *newNode);
 
-//this function doesn't check whether node in list
 CL_Result_t CL_ListRemove(CL_List_t* list, CL_ListNode_t* rmNode);
+
+bool CL_ListContain(CL_List_t *list, CL_ListNode_t *node);
+CL_ListNode_t*  CL_ListGetByIdx(CL_List_t* list, int idx);
+CL_ListNode_t *CL_ListMoveNext(CL_ListNode_t *node, bool loop);
+CL_ListNode_t *CL_ListMovePrev(CL_ListNode_t *node, bool loop);
+
 
 //for each
 #define CL_LIST_FOR_EACH(list_ptr, node_ptr) \

@@ -10,7 +10,7 @@ typedef struct
     int a, b;
 } TestStruct_t;
 
-#define TEST_POOL_SIZE (200)
+#define TEST_POOL_SIZE (202) //this number should be even
 CL_POOL_DEFINE(testPool, TEST_POOL_SIZE, TestStruct_t, static);
 CL_Result_t ListTest(void)
 {
@@ -29,12 +29,26 @@ CL_Result_t ListTest(void)
         ts->b = i;
         CL_ListAddLast(&testList, &ts->node);
     }
+    if (testList.size != TEST_POOL_SIZE - 100)
+        return CL_ResFailed;
 
     for (int i = 99; i >= 0; i--)
     {
         ts = CL_POOL_ALLOC(&testPool, TestStruct_t);
         ts->a = ts->b = i;
         CL_ListAddFirst(&testList, &ts->node);
+    }
+    if (testList.size != TEST_POOL_SIZE)
+        return CL_ResFailed;
+
+    for (int i = 0; i < TEST_POOL_SIZE; i++)
+    {
+        pNode = CL_ListGetByIdx(&testList, i);
+        pCtn = container_of(pNode, TestStruct_t, node);
+        if(pCtn->a != i || pCtn->b != i)
+        {
+            return CL_ResFailed;
+        }
     }
 
     int count = 0;
@@ -43,14 +57,13 @@ CL_Result_t ListTest(void)
         pCtn = container_of(pNode, TestStruct_t, node);
         if (pCtn->a != count || pCtn->b != count)
         {
-            // return CL_ResFailed;
+            return CL_ResFailed;
         }
         // printf("%d\n", pCtn->a);
         count++;
     }
 
     //remove even number
-
     CL_LIST_FOR_EACH_SAFE(&testList, pNode)
     {
         pCtn = container_of(pNode, TestStruct_t, node);
@@ -67,6 +80,8 @@ CL_Result_t ListTest(void)
             // printf("ctn: %d, node: %d\n", pCtn, pNode);
         }
     }
+    if (testList.size != (TEST_POOL_SIZE / 2))
+        return CL_ResFailed;
 
     count = 1;
     CL_LIST_FOR_EACH(&testList, pNode)
@@ -80,13 +95,51 @@ CL_Result_t ListTest(void)
         count += 2;
     }
 
+    count = 1;
+    pNode = CL_ListGetByIdx(&testList, 0);
+    while(pNode != CL_NULL)
+    {
+        pCtn = container_of(pNode, TestStruct_t, node);
+        if(pCtn->a != count || pCtn->b != count)
+        {
+            return CL_ResFailed;
+        }
+        count += 2;
+        pNode = CL_ListMoveNext(pNode, false);
+    }
+    if(count != TEST_POOL_SIZE + 1)
+    {
+        return CL_ResFailed;
+    }
+
+
     CL_LIST_FOR_EACH_REVERSE_SAFE(&testList, pNode)
     {
         pCtn = container_of(pNode, TestStruct_t, node);
         ts = CL_POOL_ALLOC(&testPool, TestStruct_t);
         ts->a = ts->b = pCtn->a - 1;
         CL_ListAddBefore(pNode, &ts->node);
+        // DebugLog("add: %d\n", ts->a);
     }
+    if (testList.size != TEST_POOL_SIZE)
+        return CL_ResFailed;
+
+    pNode = CL_ListGetByIdx(&testList, TEST_POOL_SIZE / 2);
+    count = TEST_POOL_SIZE / 2;
+    for(int i = 0; i < TEST_POOL_SIZE * 5; i++)
+    {
+        pCtn = container_of(pNode, TestStruct_t, node);
+        // printf("%d\n", pCtn->a);
+        if(pCtn->a != count || pCtn->b != count)
+        {
+            return CL_ResFailed;
+        }
+        pNode = CL_ListMoveNext(pNode, true);
+        if(++count >= TEST_POOL_SIZE)
+        {
+            count = 0;
+        }
+    }    
 
     count = TEST_POOL_SIZE - 1;
     CL_LIST_FOR_EACH_REVERSE(&testList, pNode)
@@ -119,6 +172,8 @@ CL_Result_t ListTest(void)
             }
         }
     }
+    if (testList.size != (TEST_POOL_SIZE / 2))
+        return CL_ResFailed;
 
     count = 0;
     CL_LIST_FOR_EACH_ENTRY(&testList, pCtn, TestStruct_t, node)
@@ -138,6 +193,26 @@ CL_Result_t ListTest(void)
         CL_ListAddAfter(&pCtn->node, &ts->node);
     }
 
+    pNode = CL_ListGetByIdx(&testList, TEST_POOL_SIZE / 3);
+    count = TEST_POOL_SIZE / 3;
+    for(int i = 0; i < TEST_POOL_SIZE * 10; i++)
+    {
+        pCtn = container_of(pNode, TestStruct_t, node);
+        if(pCtn->a != count || pCtn->b != count)
+        {
+            return CL_ResFailed;
+        }
+        pNode = CL_ListMovePrev(pNode, true);
+        if(count > 0)
+        {
+            count--;
+        }
+        else
+        {
+            count = TEST_POOL_SIZE - 1;
+        }
+    }
+
     count = TEST_POOL_SIZE - 1;
     CL_LIST_FOR_EACH_ENTRY_REVERSE(&testList, pCtn, TestStruct_t, node)
     {
@@ -153,6 +228,28 @@ CL_Result_t ListTest(void)
         return CL_ResFailed;
     }
 
+    pNode = CL_ListGetByIdx(&testList, testList.size - 1);
+    count = TEST_POOL_SIZE - 1;
+    while(pNode != CL_NULL)
+    {
+        pCtn = container_of(pNode, TestStruct_t, node);
+        if (pCtn->a != count || pCtn->b != count)
+        {
+            return CL_ResFailed;
+        }
+        count--;
+        pNode = CL_ListMovePrev(pNode, false);
+    }
+    if (count != -1)
+    {
+        return CL_ResFailed;
+    }
+    if(testList.size != TEST_POOL_SIZE)
+    {
+        return CL_ResFailed;
+    }
+
+    //remove all
     CL_LIST_FOR_EACH_REVERSE_SAFE(&testList, pNode)
     {
         pCtn = container_of(pNode, TestStruct_t, node);
@@ -166,6 +263,10 @@ CL_Result_t ListTest(void)
         }
     }
 
+    if(testList.size != 0)
+    {
+        return CL_ResFailed;
+    }
     //list should be empty
     CL_LIST_FOR_EACH_ENTRY(&testList, pCtn, TestStruct_t, node)
     {
