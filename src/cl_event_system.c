@@ -10,8 +10,9 @@ typedef struct
 } Listener_t;
 
 CL_POOL_DEFINE(lsrPool, CL_EventMax * 10, Listener_t, static);
-
 static CL_List_t lsrListArray[CL_EventMax];
+static bool initialized = false;
+
 void CL_EventSysInit(void)
 {
     CL_PoolInit(&lsrPool);
@@ -19,10 +20,14 @@ void CL_EventSysInit(void)
     {
         CL_ListInit(&lsrListArray[i]);
     }
+    initialized = true;
 }
 
 CL_Result_t CL_EventSysAddListener(CL_EventCallBack_t cb, CL_Event_t event, int session)
 {
+    if(!initialized)
+        return CL_ResNotInit;
+
     if (event >= CL_EventMax)
     {
         return CL_ResInvalidParam;
@@ -42,6 +47,9 @@ CL_Result_t CL_EventSysAddListener(CL_EventCallBack_t cb, CL_Event_t event, int 
 
 CL_Result_t CL_EventSysRemoveListener(CL_EventCallBack_t cb, CL_Event_t event, int session)
 {
+    if(!initialized)
+        return CL_ResNotInit;
+
     if (event >= CL_EventMax)
     {
         return CL_ResInvalidParam;
@@ -73,6 +81,9 @@ CL_Result_t CL_EventSysRemoveListener(CL_EventCallBack_t cb, CL_Event_t event, i
 
 CL_Result_t CL_EventSysRaise(CL_Event_t event, int session, void *eventArg)
 {
+    if(!initialized)
+        return CL_ResNotInit;
+
     if (event >= CL_EventMax)
     {
         return CL_ResInvalidParam;

@@ -22,6 +22,7 @@ typedef enum
     CL_ResFailed = -1,
     CL_ResInvalidParam = -2,
     CL_ResBusy = -3,
+    CL_ResNotInit = -4,
 } CL_Result_t;
 
 #define CL_NULL             ((void*)(0))

@@ -272,8 +272,28 @@ CL_Result_t EventSysTest(void)
     return CL_EventCleanCheck();
 }
 
+static CL_Result_t InitTest(void)
+{
+    if(CL_EventSysAddListener(TEST_CB_REF(0, 0), 0, 0) != CL_ResNotInit)
+    {
+        return CL_ResFailed;
+    }
+
+    if(CL_EventSysRemoveListener(TEST_CB_REF(0, 0), 0, 0) != CL_ResNotInit)
+    {
+        return CL_ResFailed;
+    }
+
+    if(CL_EventSysRaise(0, 0, CL_NULL) != CL_ResNotInit)
+    {
+        return CL_ResFailed;
+    }
+
+    return CL_ResSuccess;
+}
 
 TestCase_t testCases[] = {
+    {InitTest, "init"},
     {EventSysTest, "wtf"},
 };
 
