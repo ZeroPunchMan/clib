@@ -41,6 +41,11 @@ typedef enum
 
 #define container_of(member_ptr, type, member) ((type *)((char*)(member_ptr) - offset_of(type, member)))
 
+#define CL_ASSERT(x) \
+if(!(x)) \
+{Log("assert failed at %s : %d", __FILE__, __LINE__); while(1);}
+
+
 #ifdef __cplusplus
 }
 #endif
