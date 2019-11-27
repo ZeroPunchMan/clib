@@ -23,7 +23,7 @@ struct CL_Fsm;
 //---------------------------------
 typedef void(*CL_StateStart)(struct CL_Fsm* fsm, void* startParam);
 typedef void(*CL_StateStop)(struct CL_Fsm* fsm);
-typedef void(*CL_StateUpdate)(struct CL_Fsm* fsm, uint16_t interval); 
+typedef void(*CL_StateUpdate)(struct CL_Fsm* fsm); 
 
 typedef struct CL_FsmState
 {

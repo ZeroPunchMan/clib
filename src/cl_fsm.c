@@ -14,7 +14,7 @@ void CL_FsmUpdate(CL_Fsm_t* fsm, uint16_t interval)
 
     updateFunc = fsm->states[fsm->curStateIdx].update;
     if (updateFunc != CL_NULL)
-        updateFunc(fsm, interval);
+        updateFunc(fsm);
 }
 
 void CL_FsmChangeState(CL_Fsm_t* fsm, uint8_t stateIndex, void* startParam)
