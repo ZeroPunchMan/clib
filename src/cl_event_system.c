@@ -91,7 +91,7 @@ CL_Result_t CL_EventSysRaise(CL_Event_t event, int session, void *eventArg)
 
     CL_List_t *lsrList = &lsrListArray[event];
     Listener_t *pLsr;
-    CL_LIST_FOR_EACH_ENTRY(lsrList, pLsr, Listener_t, node)
+    CL_LIST_FOR_EACH_ENTRY_SAFE(lsrList, pLsr, Listener_t, node)
     {
         if (pLsr->session == session)
         {
