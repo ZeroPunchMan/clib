@@ -17,7 +17,7 @@
     }
 
 #define TO_32BITS(type, input, endian)  \
-    type result;                        \
+    type result = 0;                        \
     if (endian == CL_BigEndian)         \
     {                                   \
         result = (type)input[0] << 24;  \
@@ -67,7 +67,7 @@ void CL_Uint32ToBytes(uint32_t number, uint8_t *output, CL_Endian endian)
     }
 
 #define TO_16BITS(type, input, endian)  \
-    type result;                        \
+    type result = 0;                        \
     if (endian == CL_BigEndian)         \
     {                                   \
         result = (type)input[0] << 8;   \
