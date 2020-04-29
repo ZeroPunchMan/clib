@@ -62,29 +62,29 @@ for(CL_ListNode_t* ___pre_ptr_ = node_ptr->preNode; \
 
 //for each entry
 #define CL_LIST_FOR_EACH_ENTRY(list_ptr, ctn_ptr, type, member) \
-for(ctn_ptr = container_of((list_ptr)->head.nextNode, type, member); \
+for(ctn_ptr = CONTAINER_OF((list_ptr)->head.nextNode, type, member); \
     &ctn_ptr->member != &(list_ptr)->head; \
-    ctn_ptr = container_of(ctn_ptr->member.nextNode, type, member))
+    ctn_ptr = CONTAINER_OF(ctn_ptr->member.nextNode, type, member))
 
 //for each entry safe
 #define CL_LIST_FOR_EACH_ENTRY_SAFE(list_ptr, ctn_ptr, type, member) \
-ctn_ptr = container_of((list_ptr)->head.nextNode, type, member); \
-for(type* ___next_ctn_ = container_of(ctn_ptr->member.nextNode, type, member); \
+ctn_ptr = CONTAINER_OF((list_ptr)->head.nextNode, type, member); \
+for(type* ___next_ctn_ = CONTAINER_OF(ctn_ptr->member.nextNode, type, member); \
     &ctn_ptr->member != &(list_ptr)->head; \
-    ctn_ptr = ___next_ctn_, ___next_ctn_ = container_of(___next_ctn_->member.nextNode, type, member)) 
+    ctn_ptr = ___next_ctn_, ___next_ctn_ = CONTAINER_OF(___next_ctn_->member.nextNode, type, member)) 
 
 //for each entry reverse
 #define CL_LIST_FOR_EACH_ENTRY_REVERSE(list_ptr, ctn_ptr, type, member) \
-for(ctn_ptr = container_of((list_ptr)->head.preNode, type, member); \
+for(ctn_ptr = CONTAINER_OF((list_ptr)->head.preNode, type, member); \
     &ctn_ptr->member != &(list_ptr)->head; \
-    ctn_ptr = container_of(ctn_ptr->member.preNode, type, member))
+    ctn_ptr = CONTAINER_OF(ctn_ptr->member.preNode, type, member))
 
 //for each entry reverse safe
 #define CL_LIST_FOR_EACH_ENTRY_REVERSE_SAFE(list_ptr, ctn_ptr, type, member) \
-ctn_ptr = container_of((list_ptr)->head.preNode, type, member); \
-for(type* ___pre_ctn_ = container_of(ctn_ptr->member.preNode, type, member); \
+ctn_ptr = CONTAINER_OF((list_ptr)->head.preNode, type, member); \
+for(type* ___pre_ctn_ = CONTAINER_OF(ctn_ptr->member.preNode, type, member); \
     &ctn_ptr->member != &(list_ptr)->head; \
-    ctn_ptr = ___pre_ctn_, ___pre_ctn_ = container_of(___pre_ctn_->member.preNode, type, member)) 
+    ctn_ptr = ___pre_ctn_, ___pre_ctn_ = CONTAINER_OF(___pre_ctn_->member.preNode, type, member)) 
 
 
 #ifdef __cplusplus

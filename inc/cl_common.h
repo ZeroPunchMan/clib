@@ -29,17 +29,9 @@ typedef enum
 
 #define CL_ARRAY_LENGTH(array)      (sizeof(array) / sizeof(array[0]))
 
-//#define _USE_LOG 
+#define OFFSET_OF(type, member) ((size_t) &((type *)0)->member)
 
-#ifdef _USE_LOG
-#define Log(format, ...)    printf(format, ##__VA_ARGS__)
-#else
-#define Log(format, ...)     
-#endif
-
-#define offset_of(type, member) ((size_t) &((type *)0)->member)
-
-#define container_of(member_ptr, type, member) ((type *)((char*)(member_ptr) - offset_of(type, member)))
+#define CONTAINER_OF(member_ptr, type, member) ((type *)((char*)(member_ptr) - OFFSET_OF(type, member)))
 
 #define CL_ASSERT(x) \
 if(!(x)) \
