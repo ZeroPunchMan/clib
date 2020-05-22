@@ -1,7 +1,7 @@
 #pragma once
 
 #include "cl_common.h"
-#include "cl_event_type.h"
+#include "clib_template.h"
 
 #ifdef __cplusplus
 extern "C" {

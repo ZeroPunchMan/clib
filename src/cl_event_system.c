@@ -9,7 +9,7 @@ typedef struct
     int session;
 } Listener_t;
 
-CL_POOL_DEFINE(lsrPool, CL_EventMax * 10, Listener_t, static);
+CL_POOL_DEFINE(lsrPool, CL_EventMax * 5, Listener_t, static);
 static CL_List_t lsrListArray[CL_EventMax];
 static bool initialized = false;
 

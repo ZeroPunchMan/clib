@@ -34,22 +34,22 @@
     }                                   \
     return result;
 
-int32_t CL_BytesToInt32(const uint8_t *input, CL_Endian endian)
+int32_t CL_BytesToInt32(const uint8_t *input, CL_Endian_t endian)
 {
     TO_32BITS(int32_t, input, endian);
 }
 
-uint32_t CL_BytesToUint32(const uint8_t *input, CL_Endian endian)
+uint32_t CL_BytesToUint32(const uint8_t *input, CL_Endian_t endian)
 {
     TO_32BITS(uint32_t, input, endian);
 }
 
-void CL_Int32ToBytes(int32_t number, uint8_t *output, CL_Endian endian)
+void CL_Int32ToBytes(int32_t number, uint8_t *output, CL_Endian_t endian)
 {
     FROM_32BITS(number, output, endian);
 }
 
-void CL_Uint32ToBytes(uint32_t number, uint8_t *output, CL_Endian endian)
+void CL_Uint32ToBytes(uint32_t number, uint8_t *output, CL_Endian_t endian)
 {
     FROM_32BITS(number, output, endian);
 }
@@ -80,22 +80,22 @@ void CL_Uint32ToBytes(uint32_t number, uint8_t *output, CL_Endian endian)
     }                                   \
     return result;
 
-int16_t CL_BytesToInt16(const uint8_t *input, CL_Endian endian)
+int16_t CL_BytesToInt16(const uint8_t *input, CL_Endian_t endian)
 {
     TO_16BITS(int16_t, input, endian);
 }
 
-uint16_t CL_BytesToUint16(const uint8_t *input, CL_Endian endian)
+uint16_t CL_BytesToUint16(const uint8_t *input, CL_Endian_t endian)
 {
     TO_16BITS(uint16_t, input, endian);
 }
 
-void CL_Int16ToBytes(int16_t number, uint8_t *output, CL_Endian endian)
+void CL_Int16ToBytes(int16_t number, uint8_t *output, CL_Endian_t endian)
 {
     FROM_16BITS(number, output, endian);
 }
 
-void CL_Uint16ToBytes(uint16_t number, uint8_t *output, CL_Endian endian)
+void CL_Uint16ToBytes(uint16_t number, uint8_t *output, CL_Endian_t endian)
 {
     FROM_16BITS(number, output, endian);
 }
