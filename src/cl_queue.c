@@ -1,4 +1,5 @@
 #include "cl_queue.h"
+#include "string.h"
 
 #define DATA_CPY(DST, SRC, SIZE) memcpy(DST, SRC, SIZE)
 

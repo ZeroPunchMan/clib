@@ -1,7 +1,7 @@
 #pragma once
 
 #include "cl_common.h"
-
+#include "stdio.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -20,6 +20,10 @@ typedef enum
     CL_EventMax,
 } CL_Event_t;
 
+//---------------log-------------------------
+#include "stdio.h"
+#define USE_LDB_LOG
+#define CL_PRINTF   printf
 
 #ifdef __cplusplus
 }

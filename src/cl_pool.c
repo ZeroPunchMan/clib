@@ -1,5 +1,5 @@
 #include "cl_pool.h"
-
+#include "string.h"
 
 void CL_PoolInit(CL_Pool_t *pool)
 {
