@@ -1,7 +1,7 @@
 #pragma once
 
 #include "cl_common.h"
-#include "clib_template.h"
+#include "clib_config.h"
 
 
 #if defined(USE_LDB_LOG)
