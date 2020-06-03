@@ -26,5 +26,7 @@ if(!(x)) \
 #else
 
 #define CL_LOG(format, ...)
+#define CL_LOG_LINE(format, ...) 
+#define CL_LOG_ERROR(format, ...) 
 
 #endif
