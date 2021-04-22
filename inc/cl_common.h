@@ -21,9 +21,9 @@ typedef enum
 
 #define CL_ARRAY_LENGTH(array)      (sizeof(array) / sizeof(array[0]))
 
-#define OFFSET_OF(type, member) ((size_t) &((type *)0)->member)
+#define CL_OFFSET_OF(type, member) ((size_t) &((type *)0)->member)
 
-#define CONTAINER_OF(member_ptr, type, member) ((type *)((char*)(member_ptr) - OFFSET_OF(type, member)))
+#define CL_CONTAINER_OF(member_ptr, type, member) ((type *)((char*)(member_ptr) - CL_OFFSET_OF(type, member)))
 
 #ifdef __cplusplus
 }
