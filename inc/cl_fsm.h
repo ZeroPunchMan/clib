@@ -11,8 +11,7 @@
 
     CL_FsmUpdate(&testFsm, interval);
  **********************************************/
-#ifndef _CL_FSM_H_
-#define _CL_FSM_H_ 
+#pragma once
 
 #include "cl_common.h"
 
@@ -24,7 +23,7 @@ struct CL_Fsm;
 //---------------------------------
 typedef void(*CL_StateStart)(struct CL_Fsm* fsm, void* startParam);
 typedef void(*CL_StateStop)(struct CL_Fsm* fsm);
-typedef void(*CL_StateUpdate)(struct CL_Fsm* fsm, uint16_t interval); 
+typedef void(*CL_StateUpdate)(struct CL_Fsm* fsm); 
 
 typedef struct CL_FsmState
 {
@@ -58,6 +57,4 @@ extern CL_Fsm_t name;
 
 #ifdef __cplusplus
 }
-#endif
-
 #endif

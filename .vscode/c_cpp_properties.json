@@ -4,7 +4,8 @@
             "name": "Win32",
             "includePath": [
                 "${workspaceFolder}/**",
-                "I:/KEIL/ARM/ARMCC/include"
+                "${workspaceFolder}/inc",
+                "D:/cygwin64/lib/gcc/x86_64-pc-cygwin/7.4.0/include"
             ],
             "defines": [
                 "_DEBUG",

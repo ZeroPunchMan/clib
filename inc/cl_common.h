@@ -1,55 +1,32 @@
-#ifndef _CL_COMMON_H_
-#define _CL_COMMON_H_
-
+#pragma once
 
 #include "stdint.h"
-#include "string.h"
-#include "stdio.h"
+#include "stdbool.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#define CL_CORTEX_M3    (3)
-#define CL_CORTEX_M4    (4)
-#define CL_X64          (64)
-
-#define CL_CPU_TYPE     CL_CORTEX_M3
-
 typedef enum
 {
-    CL_FALSE = 0,
-    CL_TRUE = 1,
-} CL_BOOL;
+    CL_ResSuccess = 0,
 
-typedef enum
-{
-    CL_SUCCESS = 0,
+    CL_ResFailed = -1,
+    CL_ResInvalidParam = -2,
+    CL_ResBusy = -3,
+    CL_ResNotInit = -4,
+} CL_Result_t;
 
-    CL_FAILED = -1,
-    CL_INVALID_PARAM = -2,
-
-} CL_RESULT;
-
-
-#define CL_INLINE           __inline
-#define CL_STATIC_INLINE    static CL_INLINE
-#define CL_NULL             (0)
+#define CL_NULL             ((void*)(0))
 
 #define CL_ARRAY_LENGTH(array)      (sizeof(array) / sizeof(array[0]))
 
-//#define _USE_LOG 
+#define CL_OFFSET_OF(type, member) ((size_t) &((type *)0)->member)
 
-#ifdef _USE_LOG
-#define Log(format, ...)    printf(format, ##__VA_ARGS__)
-#else
-#define Log(format, ...)     
-#endif
+#define CL_CONTAINER_OF(member_ptr, type, member) ((type *)((char*)(member_ptr) - CL_OFFSET_OF(type, member)))
 
 #ifdef __cplusplus
 }
 #endif
 
-
-#endif
 
