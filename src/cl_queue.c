@@ -32,10 +32,10 @@ CL_Result_t CL_QueuePoll(CL_QueueInfo_t *q, void *data)
 
 CL_Result_t CL_QueuePeek(CL_QueueInfo_t *q, void *data)
 {
-    if (CL_QueueFull(q))
+    if (CL_QueueEmpty(q))
         return CL_ResFailed;
 
-    DATA_CPY((char *)q->data + (q->tail * q->data_size), data, q->data_size);
+    DATA_CPY(data, (char *)q->data + (q->head * q->data_size), q->data_size);
 
     return CL_ResSuccess;
 }
