@@ -3,10 +3,10 @@
 
 #define DATA_CPY(DST, SRC, SIZE) memcpy(DST, SRC, SIZE)
 
-static inline uint16_t NextPos(uint16_t ptr, uint16_t max)
+static inline uint16_t NextPos(uint16_t pos, uint16_t max)
 {
-    ptr = (ptr + 1) % (max + 1);
-    return ptr;
+    pos = (pos + 1) % (max + 1);
+    return pos;
 }
 
 CL_Result_t CL_QueueAdd(CL_QueueInfo_t *q, void *data)
@@ -24,18 +24,22 @@ CL_Result_t CL_QueuePoll(CL_QueueInfo_t *q, void *data)
 {
     if (CL_QueueEmpty(q))
         return CL_ResFailed;
-    DATA_CPY(data, (char *)q->data + (q->head * q->data_size), q->data_size);
+
+    if (data != CL_NULL)
+        DATA_CPY(data, (char *)q->data + (q->head * q->data_size), q->data_size);
+        
     q->head = NextPos(q->head, q->capacity);
 
     return CL_ResSuccess;
 }
 
-CL_Result_t CL_QueuePeek(CL_QueueInfo_t *q, void *data)
+CL_Result_t CL_QueuePeek(CL_QueueInfo_t *q, void **pptr)
 {
+    *pptr = CL_NULL;
     if (CL_QueueEmpty(q))
         return CL_ResFailed;
 
-    DATA_CPY(data, (char *)q->data + (q->head * q->data_size), q->data_size);
+    *pptr = (char *)q->data + (q->head * q->data_size);
 
     return CL_ResSuccess;
 }
