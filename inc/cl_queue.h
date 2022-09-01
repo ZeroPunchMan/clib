@@ -28,7 +28,7 @@ extern "C"
 
     CL_Result_t CL_QueuePoll(CL_QueueInfo_t *q, void *data);
 
-    CL_Result_t CL_QueuePeek(CL_QueueInfo_t *q, void **pptr);
+    CL_Result_t CL_QueuePeek(CL_QueueInfo_t *q, uint16_t index, void **pptr);
 
     static inline void CL_QueueClear(CL_QueueInfo_t *q)
     {

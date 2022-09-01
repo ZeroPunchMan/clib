@@ -27,19 +27,21 @@ CL_Result_t CL_QueuePoll(CL_QueueInfo_t *q, void *data)
 
     if (data != CL_NULL)
         DATA_CPY(data, (char *)q->data + (q->head * q->data_size), q->data_size);
-        
+
     q->head = NextPos(q->head, q->capacity);
 
     return CL_ResSuccess;
 }
 
-CL_Result_t CL_QueuePeek(CL_QueueInfo_t *q, void **pptr)
+CL_Result_t CL_QueuePeek(CL_QueueInfo_t *q, uint16_t index, void **pptr)
 {
-    *pptr = CL_NULL;
-    if (CL_QueueEmpty(q))
+    if (CL_QueueEmpty(q) || index >= CL_QueueLength(q))
         return CL_ResFailed;
 
-    *pptr = (char *)q->data + (q->head * q->data_size);
+    index += q->head;
+    index = index % (q->capacity + 1);
+
+    *pptr = (char *)q->data + (index * q->data_size);
 
     return CL_ResSuccess;
 }
