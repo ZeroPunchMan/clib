@@ -44,7 +44,7 @@ CL_Result_t ListTest(void)
     for (int i = 0; i < TEST_POOL_SIZE; i++)
     {
         pNode = CL_ListGetByIdx(&testList, i);
-        pCtn = container_of(pNode, TestStruct_t, node);
+        pCtn = CL_CONTAINER_OF(pNode, TestStruct_t, node);
         if(pCtn->a != i || pCtn->b != i)
         {
             return CL_ResFailed;
@@ -54,7 +54,7 @@ CL_Result_t ListTest(void)
     int count = 0;
     CL_LIST_FOR_EACH(&testList, pNode)
     {
-        pCtn = container_of(pNode, TestStruct_t, node);
+        pCtn = CL_CONTAINER_OF(pNode, TestStruct_t, node);
         if (pCtn->a != count || pCtn->b != count)
         {
             return CL_ResFailed;
@@ -66,7 +66,7 @@ CL_Result_t ListTest(void)
     //remove even number
     CL_LIST_FOR_EACH_SAFE(&testList, pNode)
     {
-        pCtn = container_of(pNode, TestStruct_t, node);
+        pCtn = CL_CONTAINER_OF(pNode, TestStruct_t, node);
         if (pCtn->a % 2 == 0)
         {
             if (CL_ListRemove(&testList, pNode) != CL_ResSuccess)
@@ -86,7 +86,7 @@ CL_Result_t ListTest(void)
     count = 1;
     CL_LIST_FOR_EACH(&testList, pNode)
     {
-        pCtn = container_of(pNode, TestStruct_t, node);
+        pCtn = CL_CONTAINER_OF(pNode, TestStruct_t, node);
         if (pCtn->a != count || pCtn->b != count)
         {
             return CL_ResFailed;
@@ -99,7 +99,7 @@ CL_Result_t ListTest(void)
     pNode = CL_ListGetByIdx(&testList, 0);
     while(pNode != CL_NULL)
     {
-        pCtn = container_of(pNode, TestStruct_t, node);
+        pCtn = CL_CONTAINER_OF(pNode, TestStruct_t, node);
         if(pCtn->a != count || pCtn->b != count)
         {
             return CL_ResFailed;
@@ -115,7 +115,7 @@ CL_Result_t ListTest(void)
 
     CL_LIST_FOR_EACH_REVERSE_SAFE(&testList, pNode)
     {
-        pCtn = container_of(pNode, TestStruct_t, node);
+        pCtn = CL_CONTAINER_OF(pNode, TestStruct_t, node);
         ts = CL_POOL_ALLOC(&testPool, TestStruct_t);
         ts->a = ts->b = pCtn->a - 1;
         CL_ListAddBefore(pNode, &ts->node);
@@ -128,7 +128,7 @@ CL_Result_t ListTest(void)
     count = TEST_POOL_SIZE / 2;
     for(int i = 0; i < TEST_POOL_SIZE * 5; i++)
     {
-        pCtn = container_of(pNode, TestStruct_t, node);
+        pCtn = CL_CONTAINER_OF(pNode, TestStruct_t, node);
         // printf("%d\n", pCtn->a);
         if(pCtn->a != count || pCtn->b != count)
         {
@@ -144,7 +144,7 @@ CL_Result_t ListTest(void)
     count = TEST_POOL_SIZE - 1;
     CL_LIST_FOR_EACH_REVERSE(&testList, pNode)
     {
-        pCtn = container_of(pNode, TestStruct_t, node);
+        pCtn = CL_CONTAINER_OF(pNode, TestStruct_t, node);
         if (pCtn->a != count || pCtn->b != count)
         {
             return CL_ResFailed;
@@ -197,7 +197,7 @@ CL_Result_t ListTest(void)
     count = TEST_POOL_SIZE / 3;
     for(int i = 0; i < TEST_POOL_SIZE * 10; i++)
     {
-        pCtn = container_of(pNode, TestStruct_t, node);
+        pCtn = CL_CONTAINER_OF(pNode, TestStruct_t, node);
         if(pCtn->a != count || pCtn->b != count)
         {
             return CL_ResFailed;
@@ -232,7 +232,7 @@ CL_Result_t ListTest(void)
     count = TEST_POOL_SIZE - 1;
     while(pNode != CL_NULL)
     {
-        pCtn = container_of(pNode, TestStruct_t, node);
+        pCtn = CL_CONTAINER_OF(pNode, TestStruct_t, node);
         if (pCtn->a != count || pCtn->b != count)
         {
             return CL_ResFailed;
@@ -252,7 +252,7 @@ CL_Result_t ListTest(void)
     //remove all
     CL_LIST_FOR_EACH_REVERSE_SAFE(&testList, pNode)
     {
-        pCtn = container_of(pNode, TestStruct_t, node);
+        pCtn = CL_CONTAINER_OF(pNode, TestStruct_t, node);
         if (CL_ListRemove(&testList, &pCtn->node) != CL_ResSuccess)
         {
             return CL_ResFailed;
