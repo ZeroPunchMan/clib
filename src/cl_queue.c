@@ -20,6 +20,35 @@ CL_Result_t CL_QueueAdd(CL_QueueInfo_t *q, void *data)
     return CL_ResSuccess;
 }
 
+CL_Result_t CL_QueueMultiAdd(CL_QueueInfo_t *q, void *data, uint16_t len)
+{
+    if (CL_QueueFreeSpace(q) < len)
+        return CL_ResFailed;
+
+    if (q->tail >= q->head)
+    {
+        uint16_t ltoEnd = q->capacity + 1 - q->tail;
+        if (ltoEnd >= len)
+        {
+            DATA_CPY((char *)q->data + (q->tail * q->data_size), data, q->data_size * len);
+            q->tail += len;
+        }
+        else
+        {
+            DATA_CPY((char *)q->data + (q->tail * q->data_size), data, q->data_size * ltoEnd);
+            uint16_t lRem = len - ltoEnd;
+            DATA_CPY((char *)q->data, (char *)data + (q->data_size * ltoEnd), q->data_size * lRem);
+            q->tail = lRem;
+        }
+    }
+    else
+    {
+        DATA_CPY((char *)q->data + (q->tail * q->data_size), data, q->data_size * len);
+        q->tail += len;
+    }
+    return CL_ResSuccess;
+}
+
 CL_Result_t CL_QueuePoll(CL_QueueInfo_t *q, void *data)
 {
     if (CL_QueueEmpty(q))
@@ -29,6 +58,36 @@ CL_Result_t CL_QueuePoll(CL_QueueInfo_t *q, void *data)
         DATA_CPY(data, (char *)q->data + (q->head * q->data_size), q->data_size);
 
     q->head = NextPos(q->head, q->capacity);
+
+    return CL_ResSuccess;
+}
+
+CL_Result_t CL_QueueMultiPoll(CL_QueueInfo_t *q, void *data, uint16_t len)
+{
+    if (CL_QueueLength(q) < len)
+        return CL_ResFailed;
+
+    if (q->tail >= q->head)
+    {
+        DATA_CPY(data, (char *)q->data + (q->head * q->data_size), q->data_size * len);
+        q->head += len;
+    }
+    else
+    {
+        uint16_t ltoEnd = q->capacity + 1 - q->head;
+        if (ltoEnd >= len)
+        {
+            DATA_CPY(data, (char *)q->data + (q->head * q->data_size), q->data_size * len);
+            q->head += len;
+        }
+        else
+        {
+            DATA_CPY(data, (char *)q->data + (q->head * q->data_size), q->data_size * ltoEnd);
+            uint16_t lRem = len - ltoEnd;
+            DATA_CPY((char *)data + (q->data_size * ltoEnd), (char *)q->data, q->data_size * lRem);
+            q->head = lRem;
+        }
+    }
 
     return CL_ResSuccess;
 }

@@ -13,8 +13,8 @@ extern "C"
         volatile uint16_t head;
         volatile uint16_t tail;
 
-        volatile uint16_t capacity;
-        volatile uint16_t data_size;
+        uint16_t capacity;
+        uint16_t data_size;
     } CL_QueueInfo_t;
 
 #define CL_QUEUE_DEF_INIT(q_name, capacity, data_type, modifier) \
@@ -26,7 +26,11 @@ extern "C"
 
     CL_Result_t CL_QueueAdd(CL_QueueInfo_t *q, void *data);
 
+    CL_Result_t CL_QueueMultiAdd(CL_QueueInfo_t *q, void *data, uint16_t len);
+
     CL_Result_t CL_QueuePoll(CL_QueueInfo_t *q, void *data);
+
+    CL_Result_t CL_QueueMultiPoll(CL_QueueInfo_t *q, void *data, uint16_t len);
 
     CL_Result_t CL_QueuePeek(CL_QueueInfo_t *q, uint16_t index, void **pptr);
 
