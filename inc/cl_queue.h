@@ -13,8 +13,8 @@ extern "C"
         volatile uint16_t head;
         volatile uint16_t tail;
 
-        uint16_t capacity;
-        uint16_t data_size;
+        volatile uint16_t capacity;
+        volatile uint16_t data_size;
     } CL_QueueInfo_t;
 
 #define CL_QUEUE_DEF_INIT(q_name, capacity, data_type, modifier) \
