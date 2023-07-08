@@ -4,16 +4,18 @@
 
 typedef enum
 {
-    QMStyle_AddCell,
+    QMStyle_AddCell = 0,
     QMStyle_AddBulk,
     QMStyle_AddBulkOrLess,
+    QMStyle_AddMax,
 } QueueMtestAddStyle_t;
 
 typedef enum
 {
-    QMStyle_PollCell,
+    QMStyle_PollCell = 0,
     QMStyle_PollBulk,
     QMStyle_PollBulkOrLess,
+    QMStyle_PollMax,
 } QueueMtestPollStyle_t;
 
 void CL_MtestQueueInit(uint32_t buffSize,
@@ -22,8 +24,10 @@ void CL_MtestQueueInit(uint32_t buffSize,
                        uint16_t lenOfBulk,
                        QueueMtestAddStyle_t addStyle,
                        QueueMtestPollStyle_t pollStyle);
+void CL_MTestQueueStop(void);
 void CL_MtestQueueExit(void);
-void CL_MTestQueueAdd(uint16_t delay, bool checkMem);
-void CL_MTestQueuePoll(uint16_t delay, bool checkMem);
+bool CL_MTestQueueAdd(uint16_t delay, bool checkMem);
+bool CL_MTestQueuePoll(uint16_t delay, bool checkMem);
+uint32_t CL_MTestQueueGetPollCount(void);
 
 //----------------------------------------------------

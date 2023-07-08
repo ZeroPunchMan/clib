@@ -93,15 +93,21 @@ void CL_MtestQueueInit(uint32_t buffSize,
     context.initialized = true;
 }
 
-void CL_MtestQueueExit(void)
+void CL_MTestQueueStop(void)
 {
     context.initialized = false;
+}
 
+void CL_MtestQueueExit(void)
+{
     free((void *)context.qBuff);
 }
 
-void CL_MTestQueueAdd(uint16_t delay, bool checkMem)
+bool CL_MTestQueueAdd(uint16_t delay, bool checkMem)
 {
+    if (!context.initialized)
+        return false;
+
     static uint8_t *addBuff = NULL;
     static uint8_t addValue = 0;
 
@@ -111,7 +117,6 @@ void CL_MTestQueueAdd(uint16_t delay, bool checkMem)
         if (!addBuff)
         {
             CL_TestErrorHandler("add malloc failed");
-            return;
         }
     }
 
@@ -142,6 +147,8 @@ void CL_MTestQueueAdd(uint16_t delay, bool checkMem)
     {
         CL_Test_Delay(delay);
     }
+
+    return true;
 }
 
 static void BulkAdd(uint8_t *addBuff, uint8_t *pAddValue)
@@ -156,7 +163,6 @@ static void BulkAdd(uint8_t *addBuff, uint8_t *pAddValue)
         if (CL_QueueMultiAdd(&context.queue, addBuff, context.lenOfBulk) != CL_ResSuccess)
         {
             CL_TestErrorHandler("queue bulk add failed");
-            return;
         }
     }
 }
@@ -175,12 +181,14 @@ static void BulkOrLessAdd(uint8_t *addBuff, uint8_t *pAddValue)
     if (CL_QueueMultiAdd(&context.queue, addBuff, addLen) != CL_ResSuccess)
     {
         CL_TestErrorHandler("queue bulk add failed");
-        return;
     }
 }
 
-void CL_MTestQueuePoll(uint16_t delay, bool checkMem)
+bool CL_MTestQueuePoll(uint16_t delay, bool checkMem)
 {
+    if (!context.initialized)
+        return false;
+
     static uint8_t *pollBuff = NULL;
     static uint8_t pollValue = 0;
 
@@ -190,7 +198,6 @@ void CL_MTestQueuePoll(uint16_t delay, bool checkMem)
         if (!pollBuff)
         {
             CL_TestErrorHandler("poll malloc error");
-            return;
         }
     }
     if (context.pollStyle == QMStyle_PollCell)
@@ -202,7 +209,6 @@ void CL_MTestQueuePoll(uint16_t delay, bool checkMem)
                 if (pollBuff[i] != pollValue)
                 {
                     CL_TestErrorHandler("poll value error");
-                    return;
                 }
             }
             pollValue++;
@@ -226,6 +232,8 @@ void CL_MTestQueuePoll(uint16_t delay, bool checkMem)
     {
         CL_Test_Delay(delay);
     }
+
+    return true;
 }
 
 static void BulkPoll(uint8_t *pollBuff, uint8_t *pPollValue)
@@ -274,7 +282,8 @@ static void BulkOrLessPoll(uint8_t *pollBuff, uint8_t *pPollValue)
         {
             for (uint16_t k = 0; k < context.queue.data_size; k++)
             {
-                if (pollBuff[context.queue.data_size * i + k] != pPollValue[0])
+                uint32_t offset = context.queue.data_size * i + k;
+                if (pollBuff[offset] != pPollValue[0])
                 {
                     CL_TestErrorHandler("bulk poll value error");
                 }
@@ -283,4 +292,9 @@ static void BulkOrLessPoll(uint8_t *pollBuff, uint8_t *pPollValue)
             context.pollCount++;
         }
     }
+}
+
+uint32_t CL_MTestQueueGetPollCount(void)
+{
+    return context.pollCount;
 }
