@@ -3,9 +3,9 @@
 
 #define DATA_CPY(DST, SRC, SIZE) memcpy(DST, SRC, SIZE)
 
-static inline uint16_t NextPos(uint16_t pos, uint16_t max)
+static inline uint16_t NextPos(uint16_t pos, uint16_t step, uint16_t max)
 {
-    pos = (pos + 1) % (max + 1);
+    pos = (pos + step) % (max + 1);
     return pos;
 }
 
@@ -14,8 +14,8 @@ CL_Result_t CL_QueueAdd(CL_QueueInfo_t *q, void *data)
     if (CL_QueueFull(q))
         return CL_ResFailed;
 
-    DATA_CPY((char *)q->data + (q->tail * q->data_size), data, q->data_size);
-    q->tail = NextPos(q->tail, q->capacity);
+    DATA_CPY((char *)q->buff + (q->tail * q->data_size), data, q->data_size);
+    q->tail = NextPos(q->tail, 1, q->capacity);
 
     return CL_ResSuccess;
 }
@@ -30,21 +30,21 @@ CL_Result_t CL_QueueMultiAdd(CL_QueueInfo_t *q, void *data, uint16_t len)
         uint16_t ltoEnd = q->capacity + 1 - q->tail;
         if (ltoEnd >= len)
         {
-            DATA_CPY((char *)q->data + (q->tail * q->data_size), data, q->data_size * len);
-            q->tail += len;
+            DATA_CPY((char *)q->buff + (q->tail * q->data_size), data, q->data_size * len);
+            q->tail = NextPos(q->tail, len, q->capacity);
         }
         else
         {
-            DATA_CPY((char *)q->data + (q->tail * q->data_size), data, q->data_size * ltoEnd);
+            DATA_CPY((char *)q->buff + (q->tail * q->data_size), data, q->data_size * ltoEnd);
             uint16_t lRem = len - ltoEnd;
-            DATA_CPY((char *)q->data, (char *)data + (q->data_size * ltoEnd), q->data_size * lRem);
+            DATA_CPY((char *)q->buff, (char *)data + (q->data_size * ltoEnd), q->data_size * lRem);
             q->tail = lRem;
         }
     }
     else
     {
-        DATA_CPY((char *)q->data + (q->tail * q->data_size), data, q->data_size * len);
-        q->tail += len;
+        DATA_CPY((char *)q->buff + (q->tail * q->data_size), data, q->data_size * len);
+        q->tail = NextPos(q->tail, len, q->capacity);
     }
     return CL_ResSuccess;
 }
@@ -55,9 +55,9 @@ CL_Result_t CL_QueuePoll(CL_QueueInfo_t *q, void *data)
         return CL_ResFailed;
 
     if (data != CL_NULL)
-        DATA_CPY(data, (char *)q->data + (q->head * q->data_size), q->data_size);
+        DATA_CPY(data, (char *)q->buff + (q->head * q->data_size), q->data_size);
 
-    q->head = NextPos(q->head, q->capacity);
+    q->head = NextPos(q->head, 1, q->capacity);
 
     return CL_ResSuccess;
 }
@@ -69,22 +69,22 @@ CL_Result_t CL_QueueMultiPoll(CL_QueueInfo_t *q, void *data, uint16_t len)
 
     if (q->tail >= q->head)
     {
-        DATA_CPY(data, (char *)q->data + (q->head * q->data_size), q->data_size * len);
-        q->head += len;
+        DATA_CPY(data, (char *)q->buff + (q->head * q->data_size), q->data_size * len);
+        q->head = NextPos(q->head, len, q->capacity);
     }
     else
     {
         uint16_t ltoEnd = q->capacity + 1 - q->head;
         if (ltoEnd >= len)
         {
-            DATA_CPY(data, (char *)q->data + (q->head * q->data_size), q->data_size * len);
-            q->head += len;
+            DATA_CPY(data, (char *)q->buff + (q->head * q->data_size), q->data_size * len);
+            q->head = NextPos(q->head, len, q->capacity);
         }
         else
         {
-            DATA_CPY(data, (char *)q->data + (q->head * q->data_size), q->data_size * ltoEnd);
+            DATA_CPY(data, (char *)q->buff + (q->head * q->data_size), q->data_size * ltoEnd);
             uint16_t lRem = len - ltoEnd;
-            DATA_CPY((char *)data + (q->data_size * ltoEnd), (char *)q->data, q->data_size * lRem);
+            DATA_CPY((char *)data + (q->data_size * ltoEnd), (char *)q->buff, q->data_size * lRem);
             q->head = lRem;
         }
     }
@@ -100,7 +100,7 @@ CL_Result_t CL_QueuePeek(CL_QueueInfo_t *q, uint16_t index, void **pptr)
     index += q->head;
     index = index % (q->capacity + 1);
 
-    *pptr = (char *)q->data + (index * q->data_size);
+    *pptr = (char *)q->buff + (index * q->data_size);
 
     return CL_ResSuccess;
 }
@@ -115,7 +115,7 @@ bool CL_QueueEmpty(CL_QueueInfo_t *q)
 
 bool CL_QueueFull(CL_QueueInfo_t *q)
 {
-    uint16_t nextTail = NextPos(q->tail, q->capacity);
+    uint16_t nextTail = NextPos(q->tail, 1, q->capacity);
     if (nextTail == q->head)
         return true;
 
