@@ -22,6 +22,11 @@ typedef struct
     volatile uint32_t qLength;
 } QueueMtestContext_t;
 
+static void BulkAdd(uint8_t *addBuff, uint8_t *pAddValue);
+static void BulkOrLessAdd(uint8_t *addBuff, uint8_t *pAddValue);
+static void BulkPoll(uint8_t *pollBuff, uint8_t *pPollValue);
+static void BulkOrLessPoll(uint8_t *pollBuff, uint8_t *pPollValue);
+
 static QueueMtestContext_t context = {.initialized = false, .pollCount = 0};
 
 // 检查边界内存是否为初始值
@@ -45,6 +50,15 @@ static void MemoryCheck(void)
             return;
         }
     }
+}
+
+static void QueueCheck(void)
+{
+    if (context.queue.head > context.queue.capacity)
+        CL_TestErrorHandler("queue head check failed");
+
+    if (context.queue.tail > context.queue.capacity)
+        CL_TestErrorHandler("queue tail check failed");
 }
 
 void CL_MtestQueueInit(uint32_t buffSize,
@@ -86,9 +100,7 @@ void CL_MtestQueueExit(void)
     free((void *)context.qBuff);
 }
 
-static void BulkAdd(uint8_t *addBuff, uint8_t *pAddValue);
-static void BulkOrLessAdd(uint8_t *addBuff, uint8_t *pAddValue);
-void CL_MTestQueueAdd(uint16_t delay)
+void CL_MTestQueueAdd(uint16_t delay, bool checkMem)
 {
     static uint8_t *addBuff = NULL;
     static uint8_t addValue = 0;
@@ -123,16 +135,17 @@ void CL_MTestQueueAdd(uint16_t delay)
         BulkOrLessAdd(addBuff, &addValue);
     }
 
+    QueueCheck();
+    if (checkMem)
+        MemoryCheck();
     if (delay)
     {
-        MemoryCheck();
         CL_Test_Delay(delay);
-        MemoryCheck();
     }
 }
 
 static void BulkAdd(uint8_t *addBuff, uint8_t *pAddValue)
-{// add bulk if queue has enough space
+{ // add bulk if queue has enough space
     if (CL_QueueFreeSpace(&context.queue) >= context.lenOfBulk)
     {
         for (uint16_t i = 0; i < context.lenOfBulk; i++)
@@ -166,9 +179,7 @@ static void BulkOrLessAdd(uint8_t *addBuff, uint8_t *pAddValue)
     }
 }
 
-static void BulkPoll(uint8_t *pollBuff, uint8_t *pPollValue);
-static void BulkOrLessPoll(uint8_t *pollBuff, uint8_t *pPollValue);
-void CL_MTestQueuePoll(uint16_t delay)
+void CL_MTestQueuePoll(uint16_t delay, bool checkMem)
 {
     static uint8_t *pollBuff = NULL;
     static uint8_t pollValue = 0;
@@ -208,11 +219,12 @@ void CL_MTestQueuePoll(uint16_t delay)
         BulkOrLessPoll(pollBuff, &pollValue);
     }
 
+    QueueCheck();
+    if (checkMem)
+        MemoryCheck();
     if (delay)
     {
-        MemoryCheck();
         CL_Test_Delay(delay);
-        MemoryCheck();
     }
 }
 

@@ -23,7 +23,7 @@ void CL_MtestQueueInit(uint32_t buffSize,
                        QueueMtestAddStyle_t addStyle,
                        QueueMtestPollStyle_t pollStyle);
 void CL_MtestQueueExit(void);
-void CL_MTestQueueAdd(uint16_t delay);
-void CL_MTestQueuePoll(uint16_t delay);
+void CL_MTestQueueAdd(uint16_t delay, bool checkMem);
+void CL_MTestQueuePoll(uint16_t delay, bool checkMem);
 
 //----------------------------------------------------
