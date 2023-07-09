@@ -54,6 +54,9 @@ static void MemoryCheck(void)
 
 static void QueueCheck(void)
 {
+    if (context.queue.capacity < 1)
+        CL_TestErrorHandler("queue capacity check failed");
+
     if (context.queue.head > context.queue.capacity)
         CL_TestErrorHandler("queue head check failed");
 
