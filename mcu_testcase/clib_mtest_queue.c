@@ -16,7 +16,7 @@ typedef struct
     uint16_t lenOfBulk;
     QueueMtestAddStyle_t addStyle;
     QueueMtestPollStyle_t pollStyle;
-    volatile bool initialized;
+    volatile bool running;
 
     volatile uint32_t pollCount;
     volatile uint32_t qLength;
@@ -27,7 +27,7 @@ static void BulkOrLessAdd(uint8_t *addBuff, uint8_t *pAddValue);
 static void BulkPoll(uint8_t *pollBuff, uint8_t *pPollValue);
 static void BulkOrLessPoll(uint8_t *pollBuff, uint8_t *pPollValue);
 
-static QueueMtestContext_t context = {.initialized = false, .pollCount = 0};
+static QueueMtestContext_t context = {.running = false, .pollCount = 0};
 
 // 检查边界内存是否为初始值
 static void MemoryCheck(void)
@@ -92,13 +92,16 @@ void CL_MtestQueueInit(uint32_t buffSize,
     context.lenOfBulk = lenOfBulk; // 块操作长度
     context.addStyle = addStyle;
     context.pollStyle = pollStyle;
+}
 
-    context.initialized = true;
+void CL_MTestQueueStart(void)
+{
+    context.running = true;
 }
 
 void CL_MTestQueueStop(void)
 {
-    context.initialized = false;
+    context.running = false;
 }
 
 void CL_MtestQueueExit(void)
@@ -108,7 +111,7 @@ void CL_MtestQueueExit(void)
 
 bool CL_MTestQueueAdd(uint16_t delay, bool checkMem)
 {
-    if (!context.initialized)
+    if (!context.running)
         return false;
 
     static uint8_t *addBuff = NULL;
@@ -189,7 +192,7 @@ static void BulkOrLessAdd(uint8_t *addBuff, uint8_t *pAddValue)
 
 bool CL_MTestQueuePoll(uint16_t delay, bool checkMem)
 {
-    if (!context.initialized)
+    if (!context.running)
         return false;
 
     static uint8_t *pollBuff = NULL;
