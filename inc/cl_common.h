@@ -2,6 +2,7 @@
 
 #include "stdint.h"
 #include "stdbool.h"
+#include "stddef.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -15,6 +16,7 @@ typedef enum
     CL_ResInvalidParam = -2,
     CL_ResBusy = -3,
     CL_ResNotInit = -4,
+    CL_ResNoAction = -5,
 } CL_Result_t;
 
 #define CL_NULL             ((void*)(0))
