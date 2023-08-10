@@ -25,6 +25,8 @@ typedef enum
 
 #define CL_CONTAINER_OF(member_ptr, type, member) ((type *)((char*)(member_ptr) - CL_OFFSET_OF(type, member)))
 
+#define CL_CLAMP(n, min, max) ((n) < (min) ? (min) : ((n) > (max) ? (max) : (n)))
+
 #ifdef __cplusplus
 }
 #endif
