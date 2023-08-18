@@ -9,7 +9,7 @@ extern "C"
 
     typedef struct
     {
-        volatile void *data;
+        volatile void *buff;
         volatile uint16_t head;
         volatile uint16_t tail;
 
@@ -53,10 +53,10 @@ extern "C"
     uint16_t CL_QueueFreeSpace(CL_Queue_t *q);
 
 #define CL_QUEUE_FOR_EACH(q_ptr, data_ptr, data_type)          \
-    data_ptr = ((data_type *)((q_ptr)->data)) + (q_ptr)->head; \
+    data_ptr = ((data_type *)((q_ptr)->buff)) + (q_ptr)->head; \
     for (int ___q_offset___ = (q_ptr)->head;                   \
          ___q_offset___ != (q_ptr)->tail;                      \
-         ___q_offset___ = (___q_offset___ + 1) % ((q_ptr)->capacity + 1), data_ptr = ((data_type *)((q_ptr)->data)) + ___q_offset___)
+         ___q_offset___ = (___q_offset___ + 1) % ((q_ptr)->capacity + 1), data_ptr = ((data_type *)((q_ptr)->buff)) + ___q_offset___)
 
 #ifdef __cplusplus
 }

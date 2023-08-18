@@ -2,6 +2,7 @@
 
 #include "stdint.h"
 #include "stdbool.h"
+#include "stddef.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -15,6 +16,7 @@ typedef enum
     CL_ResInvalidParam = -2,
     CL_ResBusy = -3,
     CL_ResNotInit = -4,
+    CL_ResNoAction = -5,
 } CL_Result_t;
 
 #define CL_NULL             ((void*)(0))
@@ -24,6 +26,8 @@ typedef enum
 #define CL_OFFSET_OF(type, member) ((size_t) &((type *)0)->member)
 
 #define CL_CONTAINER_OF(member_ptr, type, member) ((type *)((char*)(member_ptr) - CL_OFFSET_OF(type, member)))
+
+#define CL_CLAMP(n, min, max) ((n) < (min) ? (min) : ((n) > (max) ? (max) : (n)))
 
 #ifdef __cplusplus
 }
