@@ -9,7 +9,7 @@ static inline uint16_t NextPos(uint16_t pos, uint16_t max)
     return pos;
 }
 
-CL_Result_t CL_QueueAdd(CL_QueueInfo_t *q, void *data)
+CL_Result_t CL_QueueAdd(CL_Queue_t *q, void *data)
 {
     if (CL_QueueFull(q))
         return CL_ResFailed;
@@ -20,7 +20,7 @@ CL_Result_t CL_QueueAdd(CL_QueueInfo_t *q, void *data)
     return CL_ResSuccess;
 }
 
-CL_Result_t CL_QueueMultiAdd(CL_QueueInfo_t *q, void *data, uint16_t len)
+CL_Result_t CL_QueueMultiAdd(CL_Queue_t *q, void *data, uint16_t len)
 {
     if (CL_QueueFreeSpace(q) < len)
         return CL_ResFailed;
@@ -49,7 +49,7 @@ CL_Result_t CL_QueueMultiAdd(CL_QueueInfo_t *q, void *data, uint16_t len)
     return CL_ResSuccess;
 }
 
-CL_Result_t CL_QueuePoll(CL_QueueInfo_t *q, void *data)
+CL_Result_t CL_QueuePoll(CL_Queue_t *q, void *data)
 {
     if (CL_QueueEmpty(q))
         return CL_ResFailed;
@@ -62,7 +62,7 @@ CL_Result_t CL_QueuePoll(CL_QueueInfo_t *q, void *data)
     return CL_ResSuccess;
 }
 
-CL_Result_t CL_QueueMultiPoll(CL_QueueInfo_t *q, void *data, uint16_t len)
+CL_Result_t CL_QueueMultiPoll(CL_Queue_t *q, void *data, uint16_t len)
 {
     if (CL_QueueLength(q) < len)
         return CL_ResFailed;
@@ -92,7 +92,7 @@ CL_Result_t CL_QueueMultiPoll(CL_QueueInfo_t *q, void *data, uint16_t len)
     return CL_ResSuccess;
 }
 
-CL_Result_t CL_QueuePeek(CL_QueueInfo_t *q, uint16_t index, void **pptr)
+CL_Result_t CL_QueuePeek(CL_Queue_t *q, uint16_t index, void **pptr)
 {
     if (CL_QueueEmpty(q) || index >= CL_QueueLength(q))
         return CL_ResFailed;
@@ -105,7 +105,7 @@ CL_Result_t CL_QueuePeek(CL_QueueInfo_t *q, uint16_t index, void **pptr)
     return CL_ResSuccess;
 }
 
-bool CL_QueueEmpty(CL_QueueInfo_t *q)
+bool CL_QueueEmpty(CL_Queue_t *q)
 {
     if (q->head == q->tail)
         return true;
@@ -113,7 +113,7 @@ bool CL_QueueEmpty(CL_QueueInfo_t *q)
     return false;
 }
 
-bool CL_QueueFull(CL_QueueInfo_t *q)
+bool CL_QueueFull(CL_Queue_t *q)
 {
     uint16_t nextTail = NextPos(q->tail, q->capacity);
     if (nextTail == q->head)
@@ -122,7 +122,7 @@ bool CL_QueueFull(CL_QueueInfo_t *q)
     return false;
 }
 
-uint16_t CL_QueueLength(CL_QueueInfo_t *q)
+uint16_t CL_QueueLength(CL_Queue_t *q)
 {
     uint16_t head, tail;
     head = q->head;
@@ -138,7 +138,7 @@ uint16_t CL_QueueLength(CL_QueueInfo_t *q)
     }
 }
 
-uint16_t CL_QueueFreeSpace(CL_QueueInfo_t *q)
+uint16_t CL_QueueFreeSpace(CL_Queue_t *q)
 {
     return q->capacity - CL_QueueLength(q);
 }
