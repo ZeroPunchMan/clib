@@ -9,7 +9,7 @@
 
 typedef struct
 {
-    CL_QueueInfo_t queue;
+    CL_Queue_t queue;
     volatile uint8_t *qBuff;
     uint32_t buffSize;
     uint32_t marginSize;
