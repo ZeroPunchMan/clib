@@ -44,10 +44,10 @@
 #define CL_LOG_ERROR(module, format, ...)
 #endif
 
-#define CL_ASSERT(x)                                                    \
-    if (!(x))                                                           \
-    {                                                                   \
-        CL_LOG(ASSERT, "assert failed at %s : %d", __FILE__, __LINE__); \
-        while (1)                                                       \
-            ;                                                           \
+#define CL_ASSERT(x)                                                          \
+    if (!(x))                                                                 \
+    {                                                                         \
+        CL_LOG_ERROR(ASSERT, "assert failed at %s : %d", __FILE__, __LINE__); \
+        while (1)                                                             \
+            ;                                                                 \
     }
