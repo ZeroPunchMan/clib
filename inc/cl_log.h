@@ -10,7 +10,6 @@
     {                                         \
         if (CL_LOG_MODULE_CHECK(module))      \
         {                                     \
-            CL_PRINTF("info: ")               \
             CL_PRINTF(format, ##__VA_ARGS__); \
         }                                     \
     }
@@ -23,7 +22,6 @@
     {                                         \
         if (CL_LOG_MODULE_CHECK(module))      \
         {                                     \
-            CL_PRINTF("warn: ")               \
             CL_PRINTF(format, ##__VA_ARGS__); \
         }                                     \
     }
@@ -36,7 +34,6 @@
     {                                         \
         if (CL_LOG_MODULE_CHECK(module))      \
         {                                     \
-            CL_PRINTF("err: ")                \
             CL_PRINTF(format, ##__VA_ARGS__); \
         }                                     \
     }
