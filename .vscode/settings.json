@@ -13,6 +13,7 @@
         "cl_event_system.h": "c",
         "cl_event_type.h": "c",
         "cpl_list.h": "c",
-        "list": "c"
+        "list": "c",
+        "clib_template.h": "c"
     }
 }

@@ -3,30 +3,51 @@
 #include "cl_common.h"
 #include "clib_config.h"
 
+#define CL_LOG_MODULE_CHECK(module) (CL_LOG_##module##_ENABLED)
 
-#if defined(USE_LDB_LOG)
-
-#define CL_LOG(format, ...) CL_PRINTF(format, ##__VA_ARGS__)
-#define CL_LOG_LINE(format, ...)   \
-    CL_PRINTF(format, ##__VA_ARGS__); \
-    CL_PRINTF("\r\n")
-
-#define CL_LOG_ERROR(format, ...)  \
-    CL_PRINTF("!Error: "); \
-    CL_PRINTF(format, ##__VA_ARGS__); \
-    CL_PRINTF("\r\n")
-
-
-#define CL_ASSERT(x) \
-if(!(x)) \
-{CL_LOG("assert failed at %s : %d", __FILE__, __LINE__); while(1);}
-
-
-
+#if defined(CL_LOG_LEVEL_INFO)
+#define CL_LOG_INFO(module, format, ...)      \
+    {                                         \
+        if (CL_LOG_MODULE_CHECK(module))      \
+        {                                     \
+            CL_PRINTF("info: ")               \
+            CL_PRINTF(format, ##__VA_ARGS__); \
+        }                                     \
+    }
 #else
-
-#define CL_LOG(format, ...)
-#define CL_LOG_LINE(format, ...) 
-#define CL_LOG_ERROR(format, ...) 
-
+#define CL_LOG_INFO(module, format, ...)
 #endif
+
+#if defined(CL_LOG_LEVEL_WARN)
+#define CL_LOG_WARN(module, format, ...)      \
+    {                                         \
+        if (CL_LOG_MODULE_CHECK(module))      \
+        {                                     \
+            CL_PRINTF("warn: ")               \
+            CL_PRINTF(format, ##__VA_ARGS__); \
+        }                                     \
+    }
+#else
+#define CL_LOG_WARN(module, format, ...)
+#endif
+
+#if defined(CL_LOG_LEVEL_ERROR)
+#define CL_LOG_ERROR(module, format, ...)     \
+    {                                         \
+        if (CL_LOG_MODULE_CHECK(module))      \
+        {                                     \
+            CL_PRINTF("err: ")                \
+            CL_PRINTF(format, ##__VA_ARGS__); \
+        }                                     \
+    }
+#else
+#define CL_LOG_ERROR(module, format, ...)
+#endif
+
+#define CL_ASSERT(x)                                                    \
+    if (!(x))                                                           \
+    {                                                                   \
+        CL_LOG(ASSERT, "assert failed at %s : %d", __FILE__, __LINE__); \
+        while (1)                                                       \
+            ;                                                           \
+    }
