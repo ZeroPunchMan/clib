@@ -39,7 +39,7 @@
 #define CL_ASSERT(x)                                                          \
     if (!(x))                                                                 \
     {                                                                         \
-        CL_LOG_ERROR(ASSERT, "assert failed at %s : %d", __FILE__, __LINE__); \
+        CL_LOG_ERROR("assert failed at %s : %d", __FILE__, __LINE__); \
         while (1)                                                             \
             ;                                                                 \
     }
