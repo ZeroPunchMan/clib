@@ -23,8 +23,6 @@ extern "C"
 #define CL_LOG_LEVEL_WARN
 #define CL_LOG_LEVEL_ERROR
 
-#define CL_LOG_ASSERT_ENABLED (1)
-
 #ifdef __cplusplus
 }
 #endif

@@ -3,42 +3,37 @@
 #include "cl_common.h"
 #include "clib_config.h"
 
-#define CL_LOG_MODULE_CHECK(module) (CL_LOG_##module##_ENABLED)
-
 #if defined(CL_LOG_LEVEL_INFO)
-#define CL_LOG_INFO(module, format, ...)      \
-    {                                         \
-        if (CL_LOG_MODULE_CHECK(module))      \
-        {                                     \
-            CL_PRINTF(format, ##__VA_ARGS__); \
-        }                                     \
+#define CL_LOG_INFO(format, ...)          \
+    {                                     \
+        CL_PRINTF("info: ")               \
+        CL_PRINTF(format, ##__VA_ARGS__); \
+        CL_PRINTF("\r\n")                 \
     }
 #else
-#define CL_LOG_INFO(module, format, ...)
+#define CL_LOG_INFO(format, ...)
 #endif
 
 #if defined(CL_LOG_LEVEL_WARN)
-#define CL_LOG_WARN(module, format, ...)      \
-    {                                         \
-        if (CL_LOG_MODULE_CHECK(module))      \
-        {                                     \
-            CL_PRINTF(format, ##__VA_ARGS__); \
-        }                                     \
+#define CL_LOG_WARN(format, ...)          \
+    {                                     \
+        CL_PRINTF("warn: ")               \
+        CL_PRINTF(format, ##__VA_ARGS__); \
+        CL_PRINTF("\r\n")                 \
     }
 #else
-#define CL_LOG_WARN(module, format, ...)
+#define CL_LOG_WARN(format, ...)
 #endif
 
 #if defined(CL_LOG_LEVEL_ERROR)
-#define CL_LOG_ERROR(module, format, ...)     \
-    {                                         \
-        if (CL_LOG_MODULE_CHECK(module))      \
-        {                                     \
-            CL_PRINTF(format, ##__VA_ARGS__); \
-        }                                     \
+#define CL_LOG_ERROR(format, ...)         \
+    {                                     \
+        CL_PRINTF("error: ")              \
+        CL_PRINTF(format, ##__VA_ARGS__); \
+        CL_PRINTF("\r\n")                 \
     }
 #else
-#define CL_LOG_ERROR(module, format, ...)
+#define CL_LOG_ERROR(format, ...)
 #endif
 
 #define CL_ASSERT(x)                                                          \
