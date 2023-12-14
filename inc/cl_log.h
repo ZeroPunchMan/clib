@@ -6,9 +6,9 @@
 #if defined(CL_LOG_LEVEL_INFO)
 #define CL_LOG_INFO(format, ...)          \
     {                                     \
-        CL_PRINTF("info: ")               \
+        CL_PRINTF("info: ");               \
         CL_PRINTF(format, ##__VA_ARGS__); \
-        CL_PRINTF("\r\n")                 \
+        CL_PRINTF("\r\n");                 \
     }
 #else
 #define CL_LOG_INFO(format, ...)
@@ -17,9 +17,9 @@
 #if defined(CL_LOG_LEVEL_WARN)
 #define CL_LOG_WARN(format, ...)          \
     {                                     \
-        CL_PRINTF("warn: ")               \
+        CL_PRINTF("warn: ");               \
         CL_PRINTF(format, ##__VA_ARGS__); \
-        CL_PRINTF("\r\n")                 \
+        CL_PRINTF("\r\n");                 \
     }
 #else
 #define CL_LOG_WARN(format, ...)
@@ -28,9 +28,9 @@
 #if defined(CL_LOG_LEVEL_ERROR)
 #define CL_LOG_ERROR(format, ...)         \
     {                                     \
-        CL_PRINTF("error: ")              \
+        CL_PRINTF("error: ");              \
         CL_PRINTF(format, ##__VA_ARGS__); \
-        CL_PRINTF("\r\n")                 \
+        CL_PRINTF("\r\n");                 \
     }
 #else
 #define CL_LOG_ERROR(format, ...)
