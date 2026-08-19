@@ -17,6 +17,7 @@ extern "C"
         volatile uint16_t data_size;
     } CL_Queue_t;
 
+// ringbuffer实现队列, 实际缓存为容量+1, 用于区分是否满
 #define CL_QUEUE_DEF_INIT(q_name, capacity, data_type, modifier) \
     static data_type q_name##_buf[capacity + 1];                 \
     modifier CL_Queue_t q_name = {q_name##_buf, 0, 0, capacity, sizeof(data_type)};
@@ -33,6 +34,12 @@ extern "C"
     CL_Result_t CL_QueueMultiPoll(CL_Queue_t *q, void *data, uint16_t len);
 
     CL_Result_t CL_QueuePeek(CL_Queue_t *q, uint16_t index, void **pptr);
+
+    // 获取连续内存的数据,用于DMA之类的操作
+    CL_Result_t CL_QeueuGetContinousData(CL_Queue_t *q, uint16_t len, void **pptr, uint16_t *pOutLen);
+
+    // Poll,但不需要copy出来,用与数据处理完之后从队列丢掉已用的数据
+    CL_Result_t CL_QueuePollWithoutCopy(CL_Queue_t *q, uint16_t len);
 
     static inline void CL_QueueClear(CL_Queue_t *q)
     {

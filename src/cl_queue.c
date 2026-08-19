@@ -105,6 +105,54 @@ CL_Result_t CL_QueuePeek(CL_Queue_t *q, uint16_t index, void **pptr)
     return CL_ResSuccess;
 }
 
+CL_Result_t CL_QeueuGetContinousData(CL_Queue_t *q, uint16_t len, void **pptr, uint16_t *pOutLen)
+{
+    if (CL_QueueEmpty(q))
+        return CL_ResFailed;
+
+    uint16_t head, tail;
+    head = q->head;
+    tail = q->tail;
+
+    *pptr = (char *)q->buff + (head * q->data_size);
+    if (tail >= head)
+    { // 此时全部数据是连续的
+        *pOutLen = CL_MIN(tail - head, len);
+    }
+    else
+    { // 此时数据不连续,最多返回head到尾部的数据
+        uint16_t ltoEnd = q->capacity + 1 - head;
+        *pOutLen = CL_MIN(ltoEnd, len);
+    }
+    return CL_ResSuccess;
+}
+
+CL_Result_t CL_QueuePollWithoutCopy(CL_Queue_t *q, uint16_t len)
+{
+    if (CL_QueueLength(q) < len)
+        return CL_ResFailed;
+
+    if (q->tail >= q->head)
+    { // 此时数据连续,直接往后移head位置即可
+        q->head = NextPos(q->head, len, q->capacity);
+    }
+    else
+    { // 此时数据分两段
+        uint16_t ltoEnd = q->capacity + 1 - q->head;
+        if (ltoEnd >= len)
+        { // 如果从head到尾部数据足够,则head往后移即可
+            q->head = NextPos(q->head, len, q->capacity);
+        }
+        else
+        { // 如果从head到尾部数据不够,计算剩下的数据长度,head从缓存区头部往后移剩下的长度
+            uint16_t lRem = len - ltoEnd;
+            q->head = lRem;
+        }
+    }
+
+    return CL_ResSuccess;
+}
+
 bool CL_QueueEmpty(CL_Queue_t *q)
 {
     if (q->head == q->tail)
