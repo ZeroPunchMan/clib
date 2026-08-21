@@ -6,9 +6,8 @@
 #if defined(CL_LOG_LEVEL_INFO)
 #define CL_LOG_INFO(format, ...)          \
     {                                     \
-        CL_PRINTF("i:");               \
         CL_PRINTF(format, ##__VA_ARGS__); \
-        CL_PRINTF("\r\n");                 \
+        CL_PRINTF("\n");                 \
     }
 #else
 #define CL_LOG_INFO(format, ...)
