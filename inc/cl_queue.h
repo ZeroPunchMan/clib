@@ -25,27 +25,40 @@ extern "C"
 #define CL_QUEUE_DECL(q_name) \
     extern CL_Queue_t q_name;
 
+    // 添加单个数据
     CL_Result_t CL_QueueAdd(CL_Queue_t *q, void *data);
 
+    // 添加多个数据
     CL_Result_t CL_QueueMultiAdd(CL_Queue_t *q, void *data, uint16_t len);
 
+    // 获取单个数据
     CL_Result_t CL_QueuePoll(CL_Queue_t *q, void *data);
 
+    // 获取多个数据
     CL_Result_t CL_QueueMultiPoll(CL_Queue_t *q, void *data, uint16_t len);
 
+    // 查看指定索引的数据
     CL_Result_t CL_QueuePeek(CL_Queue_t *q, uint16_t index, void **pptr);
 
     // 获取连续内存的数据,用于DMA之类的操作
     CL_Result_t CL_QeueuGetContinousData(CL_Queue_t *q, uint16_t len, void **pptr, uint16_t *pOutLen);
 
-    // Poll,但不需要copy出来,用与数据处理完之后从队列丢掉已用的数据
+    // Poll,但不需要copy出来,用于数据处理完之后从队列丢掉已用的数据
     CL_Result_t CL_QueuePollWithoutCopy(CL_Queue_t *q, uint16_t len);
 
+    // 获取连续空闲的内存,用于DMA之类的操作
+    CL_Result_t CL_QeueuGetContinousFreeSpace(CL_Queue_t *q, uint16_t len, void **pptr, uint16_t *pOutLen);
+
+    // Add,但是不需要复制数据,用于DMA填充完数据之后,移动尾指针
+    CL_Result_t CL_QueueAddWithoutCopy(CL_Queue_t *q, uint16_t len);
+
+    // 清理队列,如果生产和消费是异步的,要注意线程安全问题
     static inline void CL_QueueClear(CL_Queue_t *q)
     {
         q->head = q->tail = 0;
     }
 
+    // 获取容量
     static inline uint16_t CL_QueueCapacity(CL_Queue_t *q)
     {
         return q->capacity;

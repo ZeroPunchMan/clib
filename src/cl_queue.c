@@ -153,6 +153,53 @@ CL_Result_t CL_QueuePollWithoutCopy(CL_Queue_t *q, uint16_t len)
     return CL_ResSuccess;
 }
 
+CL_Result_t CL_QeueuGetContinousFreeSpace(CL_Queue_t *q, uint16_t len, void **pptr, uint16_t *pOutLen)
+{
+    if (CL_QueueFull(q))
+        return CL_ResFailed;
+
+    uint16_t head, tail;
+    head = q->head;
+    tail = q->tail;
+
+    *pptr = (char *)q->buff + (tail * q->data_size);
+    if (tail >= head)
+    {
+        uint16_t ltoEnd = q->capacity + 1 - q->tail;
+        *pOutLen = CL_MIN(ltoEnd, len);
+    }
+    else
+    {
+        *pOutLen = CL_MIN(head - tail - 1, len);
+    }
+    return CL_ResSuccess;
+}
+
+CL_Result_t CL_QueueAddWithoutCopy(CL_Queue_t *q, uint16_t len)
+{
+    if (CL_QueueFreeSpace(q) < len)
+        return CL_ResFailed;
+
+    if (q->tail >= q->head)
+    {
+        uint16_t ltoEnd = q->capacity + 1 - q->tail;
+        if (ltoEnd >= len)
+        {
+            q->tail = NextPos(q->tail, len, q->capacity);
+        }
+        else
+        {
+            uint16_t lRem = len - ltoEnd;
+            q->tail = lRem;
+        }
+    }
+    else
+    {
+        q->tail = NextPos(q->tail, len, q->capacity);
+    }
+    return CL_ResSuccess;
+}
+
 bool CL_QueueEmpty(CL_Queue_t *q)
 {
     if (q->head == q->tail)
