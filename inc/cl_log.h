@@ -18,7 +18,7 @@
     {                                     \
         CL_PRINTF("w:");               \
         CL_PRINTF(format, ##__VA_ARGS__); \
-        CL_PRINTF("\r\n");                 \
+        CL_PRINTF("\n");                 \
     }
 #else
 #define CL_LOG_WARN(format, ...)
@@ -29,7 +29,7 @@
     {                                     \
         CL_PRINTF("e:");              \
         CL_PRINTF(format, ##__VA_ARGS__); \
-        CL_PRINTF("\r\n");                 \
+        CL_PRINTF("\n");                 \
     }
 #else
 #define CL_LOG_ERROR(format, ...)
