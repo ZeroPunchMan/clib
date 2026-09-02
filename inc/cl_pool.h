@@ -31,6 +31,9 @@ void CL_PoolInit(CL_Pool_t* pool);
 void *CL_PoolAlloc(CL_Pool_t *pool, uint16_t cellSize);
 CL_Result_t CL_PoolFree(CL_Pool_t* pool, void* pCell);
 
+void *CL_PoolAllocFast(CL_Pool_t *pool, uint16_t cellSize); //快速接口,去掉了一些错误检测
+CL_Result_t CL_PoolFreeFast(CL_Pool_t *pool, void *pCell);
+
 
 #define USE_POOL_CHECK
 

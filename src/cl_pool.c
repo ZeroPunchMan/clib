@@ -28,6 +28,22 @@ void *CL_PoolAlloc(CL_Pool_t *pool, uint16_t cellSize)
     return result;
 }
 
+void *CL_PoolAllocFast(CL_Pool_t *pool, uint16_t cellSize)
+{
+    void *result = CL_NULL;
+
+    if (pool->freeCount > 0)
+    {
+        uint16_t cellIdx;
+        pool->freeCount--;
+        cellIdx = pool->idxBuff[pool->freeCount];
+
+        result = (void *)((char*)pool->memBuff + cellIdx * pool->cellSize);
+    }
+
+    return result;
+}
+
 CL_Result_t CL_PoolFree(CL_Pool_t *pool, void *pCell)
 {
     if(pCell < pool->memBuff || pool->freeCount >= pool->capacity)
@@ -42,6 +58,14 @@ CL_Result_t CL_PoolFree(CL_Pool_t *pool, void *pCell)
     return CL_ResSuccess;
 }
 
+CL_Result_t CL_PoolFreeFast(CL_Pool_t *pool, void *pCell)
+{
+    uint32_t addrOffset = (char *)pCell - (char *)pool->memBuff;
+
+    uint16_t cellIdx = addrOffset / pool->cellSize;
+    pool->idxBuff[pool->freeCount++] = cellIdx;
+    return CL_ResSuccess;
+}
 
 #ifdef USE_POOL_CHECK
 #include "stdlib.h"
